@@ -3,14 +3,19 @@
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 int x = 0;
 int y = 0;
+
+int r = 0;
+int g = 0;
+int b = 0;
+
 void iDraw()
 {
 	iClear();
 	iFilledCircle(x + 193, y + 400, 45);
 	iFilledCircle(x + 385, y + 400, 45);
-	iRectangle(x + 100, y + 250, x + 380, y + 250);
+	iRectangle(x + 100, y + 250, 380, 250);
 	iLine(x + 193, y + 300, x + 385, y + 300);
-	iSetColor(255, 25, 255);
+	iSetColor(r, g, b);
 
 }
 
@@ -57,9 +62,33 @@ key- holds the ASCII value of the key pressed.
 
 void iKeyboard(unsigned char key)
 {
-	if (key == '\r')
+	if (key == 'r')
 	{
-		
+		r = 255;
+	}
+	else if (key == 'g')
+	{
+		g = 255;
+	}
+	else if (key == 'b')
+	{
+		b = 255;
+	}
+	else if (key == 'w')
+	{
+		y+=10;
+	}
+	else if (key == 's')
+	{
+		y-=10;
+	}
+	else if (key == 'a')
+	{
+		x-=10;
+	}
+	else if (key == 'd')
+	{
+		x+=10;
 	}
 	
 	
