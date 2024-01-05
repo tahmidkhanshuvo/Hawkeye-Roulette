@@ -1,13 +1,40 @@
 #include "iGraphics.h"
 
+
+int a, c, d, e;
+float x = 0;
+float y = 0;
+int r = 255;
+int g = 255;
+int b = 255;
+int dx = 10;
+int dy = 10;
+
+
+
+void drawHomepage();
+int HomePage = 1;
+
+
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
 void iDraw()
 {
 	iClear();
-	iFilledRectangle(10, 10, 100, 100);
-	iSetColor(255, 255, 255);
+	iShowImage(x, y, 1200, 600, a);
+	iShowImage(x + 1200, y, 1200, 600, a);
+	x -= 0.05;
+	if (x < -600)
+		x = 0;
 
+	iSetColor(r, g, b);
+	iText(100, 100, "Press F2 to start", GLUT_BITMAP_TIMES_ROMAN_24);
+
+	void iSpecialKeyBoard();
+	/*if (HomePage == 1){
+	drawHomepage();
+
+	}*/
 }
 
 
@@ -21,28 +48,29 @@ void iDraw()
 
 void iMouseMove(int mx, int my)
 {
-	
+
 }
 //*******************************************************************ipassiveMouse***********************************************************************//
 void iPassiveMouseMove(int mx, int my)
 {
-	
+
 }
 
 void iMouse(int button, int state, int mx, int my)
 {
-	
+
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
 
-		
+
 	}
-	
-	
+
+
 	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		
+
 	}
+
 }
 
 /*
@@ -55,10 +83,11 @@ void iKeyboard(unsigned char key)
 {
 	if (key == '\r')
 	{
-		
+
 	}
-	
-	
+
+
+
 }
 
 /*
@@ -73,29 +102,42 @@ GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 void iSpecialKeyboard(unsigned char key)
 {
 
-	
+
 	if (key == GLUT_KEY_RIGHT)
 	{
-				
+
 	}
 	if (key == GLUT_KEY_LEFT)
 	{
-		
+
 	}
-	
+
 	if (key == GLUT_KEY_HOME)
 	{
-		
+
 	}
-	
+	else if (key == GLUT_KEY_F2){
+		if (HomePage == 1){
+			drawHomepage();
+
+		}
+	}
+
+}
+void drawHomepage(){
+	iSetColor(128, 128, 128);
+	iFilledRectangle(0, 0, 1200, 600);
+	iShowBMP2(0, 0, "./images/menu.bmp", 0);
+	iShowBMP2(0, 0, "./images/menu.bmp", 0);
+
 }
 
 
 int main()
 {
-	///srand((unsigned)time(NULL));
-	iInitialize(600, 400, "Project Title");
-	///updated see the documentations
-	iStart();
+
+	iInitialize(1200, 600, "Project Title");
+	a = iLoadImage("./images/starting.bmp"),
+		iStart();
 	return 0;
 }
