@@ -1,12 +1,16 @@
 #include "iGraphics.h"
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
-
+int x = 0;
+int y = 0;
 void iDraw()
 {
 	iClear();
-	iFilledRectangle(10, 10, 100, 100);
-	iSetColor(255, 255, 255);
+	iFilledCircle(x + 193, y + 400, 45);
+	iFilledCircle(x + 385, y + 400, 45);
+	iRectangle(x + 100, y + 250, x + 380, y + 250);
+	iLine(x + 193, y + 300, x + 385, y + 300);
+	iSetColor(255, 25, 255);
 
 }
 
@@ -94,7 +98,7 @@ void iSpecialKeyboard(unsigned char key)
 int main()
 {
 	///srand((unsigned)time(NULL));
-	iInitialize(600, 400, "Project Title");
+	iInitialize(600, 600, "Project Title");
 	///updated see the documentations
 	iStart();
 	return 0;
