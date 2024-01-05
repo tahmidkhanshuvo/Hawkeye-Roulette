@@ -4,9 +4,9 @@
 int x = 0;
 int y = 0;
 
-int r = 0;
-int g = 0;
-int b = 0;
+int r = 255;
+int g = 255;
+int b = 255;;
 
 void iDraw()
 {
@@ -65,14 +65,20 @@ void iKeyboard(unsigned char key)
 	if (key == 'r')
 	{
 		r = 255;
+		g = 0;
+		b = 0;
 	}
 	else if (key == 'g')
 	{
 		g = 255;
+		r = 0;
+		b = 0;
 	}
 	else if (key == 'b')
 	{
 		b = 255;
+		r = 0;
+		g = 0;
 	}
 	else if (key == 'w')
 	{
@@ -109,11 +115,22 @@ void iSpecialKeyboard(unsigned char key)
 	
 	if (key == GLUT_KEY_RIGHT)
 	{
-				
+		x += 10;
 	}
+
 	if (key == GLUT_KEY_LEFT)
 	{
-		
+		x -= 10;
+	}
+
+	if (key == GLUT_KEY_UP)
+	{
+		y += 10;
+	}
+
+	if (key == GLUT_KEY_DOWN)
+	{
+		y -= 10;
 	}
 	
 	if (key == GLUT_KEY_HOME)
@@ -127,7 +144,7 @@ void iSpecialKeyboard(unsigned char key)
 int main()
 {
 	///srand((unsigned)time(NULL));
-	iInitialize(600, 600, "Project Title");
+	iInitialize(1200, 700, "Play With Box");
 	///updated see the documentations
 	iStart();
 	return 0;
