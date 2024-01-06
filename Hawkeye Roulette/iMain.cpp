@@ -1,7 +1,7 @@
 #include "iGraphics.h"
 
 
-int a, c, d, e;
+int a, c, d, e,f,mc;
 float x = 0;
 float y = 0;
 int r = 255;
@@ -11,9 +11,19 @@ int dx = 10;
 int dy = 10;
 
 
+//home page properties
 
 void drawHomepage();
 int HomePage = 1;
+
+
+//startpage properties(level 1)
+
+void drawStartpage();
+void startButtonClickHandler();
+int startButtonClick = 0;
+int startPage = 0;
+
 
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
@@ -21,7 +31,7 @@ int HomePage = 1;
 void iDraw()
 {
 	iClear();
-	iShowImage(x, y, 1200, 600, a);
+	/*iShowImage(x, y, 1200, 600, a);
 	iShowImage(x + 1200, y, 1200, 600, a);
 	x -= 0.05;
 	if (x < -600)
@@ -30,11 +40,14 @@ void iDraw()
 	iSetColor(r, g, b);
 	iText(100, 100, "Press F2 to start", GLUT_BITMAP_TIMES_ROMAN_24);
 
-	void iSpecialKeyBoard();
-	/*if (HomePage == 1){
+	void iSpecialKeyBoard();*/
+	if (HomePage == 1){
 	drawHomepage();
 
-	}*/
+	}
+	else if (startPage == 1){
+		drawStartpage();
+	}
 }
 
 
@@ -61,8 +74,10 @@ void iMouse(int button, int state, int mx, int my)
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-
-
+		printf(" x = %d y = %d\n", mx, my);
+		if (HomePage == 1 && (mx >= 820 && mx <= 947) && (my >= 403 && my <= 458)){
+			startButtonClickHandler();
+		}
 	}
 
 
@@ -127,17 +142,46 @@ void iSpecialKeyboard(unsigned char key)
 void drawHomepage(){
 	iSetColor(128, 128, 128);
 	iFilledRectangle(0, 0, 1200, 600);
-	iShowBMP2(0, 0, "./images/menu.bmp", 0);
-	iShowBMP2(0, 0, "./images/menu.bmp", 0);
+	iShowImage(x, y, 1200, 600, c);
+	iShowImage(x + 1200, y, 1200, 600, c);
+	x -= 0.05;
+	if (x < -600)
+		x = 0;
+
+	iShowBMP2(800, 400, "images\\start.bmp", 0);
+	iShowBMP2(800, 300, "images\\pause.bmp", 0);
+	iShowBMP2(800, 200, "images\\option.bmp", 0);
+	iShowBMP2(800, 100, "images\\exit.bmp", 0);
+	//iShowBMP2(200, 0, "images\\charecter.bmp", 255);
+	iShowImage(200, 0, 334, 484, e);
+}
+void drawStartpage(){
+	iFilledRectangle(0, 0, 1200, 600);
+	iShowImage(x, y, 1200, 600, d);
+	iShowImage(x + 1200, y, 1200, 600, d);
+	x -= 0.05;
+	if (x < -600)
+		x = 0;
+	
+	//iShowImage(0, -120, 400, 319, f);
+
+	
+}
+void startButtonClickHandler(){
+	HomePage = 0;
+	startPage = 1;
 
 }
-
 
 int main()
 {
 
 	iInitialize(1200, 600, "Project Title");
 	a = iLoadImage("./images/starting.bmp"),
-		iStart();
+	c = iLoadImage("./images/3.bmp");
+	e = iLoadImage("./images/11.1.png");
+	d = iLoadImage("./images/level1.bmp");
+	f = iLoadImage("./images/stone.png");
+	iStart();
 	return 0;
 }
