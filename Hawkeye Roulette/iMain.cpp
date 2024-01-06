@@ -163,8 +163,8 @@ void drawStartpage(){
 	if (x < -600)
 		x = 0;
 	
-	//iShowImage(0, -120, 400, 319, f);
-
+	iShowImage(0, -120, 400, 319, f);
+	iShowImage(0, 100, 334, 484, mc);
 	
 }
 void startButtonClickHandler(){
@@ -182,6 +182,7 @@ int main()
 	e = iLoadImage("./images/11.1.png");
 	d = iLoadImage("./images/level1.bmp");
 	f = iLoadImage("./images/stone.png");
+	mc = iLoadImage("./charecter/12.png");
 	iStart();
 	return 0;
 }
