@@ -24,7 +24,13 @@ void startButtonClickHandler();
 int startButtonClick = 0;
 int startPage = 0;
 
+//charecter properties
 
+void arrowAttack();
+int stand;
+int load[12];
+int arrowclick = 0;
+int charIndex = 0;
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
@@ -48,6 +54,7 @@ void iDraw()
 	else if (startPage == 1){
 		drawStartpage();
 	}
+	
 }
 
 
@@ -77,6 +84,9 @@ void iMouse(int button, int state, int mx, int my)
 		printf(" x = %d y = %d\n", mx, my);
 		if (HomePage == 1 && (mx >= 820 && mx <= 947) && (my >= 403 && my <= 458)){
 			startButtonClickHandler();
+		}
+		else if (startPage == 1 && (mx >= 150 && mx <= 244) && (my >= 104 && my <= 293)){
+			arrowclick = 1;
 		}
 	}
 
@@ -164,8 +174,23 @@ void drawStartpage(){
 		x = 0;
 	
 	iShowImage(0, -120, 400, 319, f);
-	iShowImage(0, 100, 334, 484, mc);
+	iShowImage(150, 100, 100, 200, stand);
+
+	if (arrowclick == 1){
+		arrowAttack();
+	}
+
 	
+	
+	
+}
+void arrowAttack(){
+
+	for (charIndex = 0; charIndex <= 12; charIndex++){
+		iShowImage(0, 100, 300, 400, load[charIndex]);
+	}
+	charIndex = 0;
+
 }
 void startButtonClickHandler(){
 	HomePage = 0;
@@ -180,9 +205,26 @@ int main()
 	a = iLoadImage("./images/starting.bmp"),
 	c = iLoadImage("./images/3.bmp");
 	e = iLoadImage("./images/11.1.png");
+
 	d = iLoadImage("./images/level1.bmp");
 	f = iLoadImage("./images/stone.png");
-	mc = iLoadImage("./charecter/12.png");
+
+
+	stand = iLoadImage("./images/11.1.png");
+
+	load[0] = iLoadImage("./images/char1.png");
+	load[1] = iLoadImage("./images/char2.png");
+	load[2] = iLoadImage("./images/char3.png");
+	load[3] = iLoadImage("./images/char4.png");
+	load[4] = iLoadImage("./images/char5.png");
+	load[5] = iLoadImage("./images/char6.png");
+    load[6] = iLoadImage("./images/char7.png");
+	load[7] = iLoadImage("./images/char8.png");
+	load[8] = iLoadImage("./images/char9.png");
+	load[9] = iLoadImage("./images/char10.png");
+	load[10] = iLoadImage("./images/char11.png");
+	load[11] = iLoadImage("./images/char12.png");
+
 	iStart();
 	return 0;
 }
