@@ -1,7 +1,7 @@
 #include "iGraphics.h"
 
 
-int a, c, d, e, f, mc;
+int a, c, d, e, f, h,arrow;
 float x = 0;
 float y = 0;
 int r = 255;
@@ -11,20 +11,20 @@ int dx = 10;
 int dy = 10;
 
 
-//home page properties
+//-------------menu page properties------------
 
 void drawHomepage();
 int HomePage = 1;
 
 
-//startpage properties(level 1)
+//-------startpage properties(level 1)-------
 
 void drawStartpage();
 void startButtonClickHandler();
 int startButtonClick = 0;
 int startPage = 0;
 
-// main charecter properties
+//---------------------------------------------------- main charecter properties----------------------------------------------
 
 void arrowAttack();
 int stand;
@@ -38,6 +38,20 @@ int char_stand = 0;
 int stand_count = 0;
 
 int a_launch = 0;
+
+//------------------------------------------------vilain properies for level1--------------------------------------------------------------
+
+
+void villain1();
+int stand2;
+int v1_x = 0;
+int v1_y = 0; 
+char v1[6][25] = { "images\\v1.bmp", "images\\v2.bmp", "images\\v3.bmp", "images\\v4.bmp", "images\\v5.bmp", "images\\v6.bmp" };
+int v1_index = 0;
+int v1_attack = 1;
+int v1_count = 0;
+int v1_stand = 1;
+
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
 void iDraw()
@@ -63,12 +77,18 @@ void iDraw()
 
 	if (arrowclick == 1 && char_stand == 1){
 		arrowAttack();
-		stand_count++;
-		if (stand_count >= 20){
-			stand_count = 0;
-			charIndex = 0;
-			char_stand = 0;
-		}
+		
+	}
+
+	/*if (a_launch == 1){
+
+		iShowImage(150, 100, 50, 50, arrow);
+	}*/
+
+	if (v1_attack == 1 && startPage == 1){
+		villain1();
+		
+
 	}
 
 }
@@ -124,6 +144,7 @@ void iKeyboard(unsigned char key)
 	{
 		arrowclick = 1;
 		char_stand = 1;
+		a_launch = 1;
 	}
 
 
@@ -177,8 +198,8 @@ void drawHomepage(){
 	iShowBMP2(800, 300, "images\\pause.bmp", 0);
 	iShowBMP2(800, 200, "images\\option.bmp", 0);
 	iShowBMP2(800, 100, "images\\exit.bmp", 0);
-	//iShowBMP2(200, 0, "images\\charecter.bmp", 255);
-	iShowImage(200, 0, 334, 484, e);
+	
+	iShowImage(100, 0, 661, 377, e);
 }
 void drawStartpage(){
 	iFilledRectangle(0, 0, 1200, 600);
@@ -192,12 +213,15 @@ void drawStartpage(){
 	if (char_stand == 0){
 		iShowImage(150, 100, 100, 200, stand);
 	}
-
-
+	if (v1_stand == 1){
+		iShowImage(800, 100, 100, 200, stand2);
+	}
+	iShowImage(800, -120, 400, 319, h);
 
 
 }
 void arrowAttack(){
+
 
 	iShowBMP2(char_x + 150, char_y + 100, load[charIndex], 0);
 	charIndex++;
@@ -205,7 +229,27 @@ void arrowAttack(){
 		charIndex = 0;
 
 	}
+	stand_count++;
+	if (stand_count >= 12){
+		stand_count = 0;
+		charIndex = 0;
+		char_stand = 0;
+	}
 
+}
+void villain1(){
+
+	iShowBMP2(v1_x+900, v1_y+ 50, v1[v1_index], 0);
+	v1_index++;
+	if (v1_index >= 6){
+		v1_index = 0;
+	}
+	v1_count++;
+	if (v1_count >= 6){
+		v1_count = 0;
+		v1_index = 0;
+		v1_stand = 0;
+	}
 }
 void startButtonClickHandler(){
 	HomePage = 0;
@@ -215,17 +259,23 @@ void startButtonClickHandler(){
 
 int main()
 {
-	iSetTimer(-900000, arrowAttack);
+	iSetTimer(1000, arrowAttack);
+	iSetTimer(200, villain1);
+
 	iInitialize(1200, 600, "Project Title");
 	a = iLoadImage("./images/starting.bmp"),
-		c = iLoadImage("./images/3.bmp");
-	e = iLoadImage("./images/11.1.png");
+	c = iLoadImage("./images/3.bmp");
+	e = iLoadImage("./images/charMenu.png");
 
 	d = iLoadImage("./images/level1.bmp");
 	f = iLoadImage("./images/stone.png");
+	h = iLoadImage("./images/stone.png");
 
 
 	stand = iLoadImage("./images/11.1.png");
+	stand2 = iLoadImage("./images/v1.bmp");
+
+	arrow = iLoadImage("./images/arrow.bmp");
 
 
 	iStart();
