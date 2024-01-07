@@ -1,7 +1,7 @@
 #include "iGraphics.h"
 
 
-int a, c, d, e,f,mc;
+int a, c, d, e, f, mc;
 float x = 0;
 float y = 0;
 int r = 255;
@@ -24,14 +24,20 @@ void startButtonClickHandler();
 int startButtonClick = 0;
 int startPage = 0;
 
-//charecter properties
+// main charecter properties
 
 void arrowAttack();
 int stand;
-int load[12];
+char load[12][25] = { "images\\character1.bmp", "images\\character2.bmp", "images\\character3.bmp", "images\\character4.bmp", "images\\character5.bmp", "images\\character6.bmp", "images\\character7.bmp", "images\\character8.bmp", "images\\character9.bmp", "images\\character10.bmp", "images\\character11.bmp", "images\\character12.bmp" };
 int arrowclick = 0;
 int charIndex = 0;
 
+int char_x = 0;
+int char_y = 0;
+int char_stand = 0;
+int stand_count = 0;
+
+int a_launch = 0;
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
 void iDraw()
@@ -41,20 +47,30 @@ void iDraw()
 	iShowImage(x + 1200, y, 1200, 600, a);
 	x -= 0.05;
 	if (x < -600)
-		x = 0;
+	x = 0;
 
 	iSetColor(r, g, b);
 	iText(100, 100, "Press F2 to start", GLUT_BITMAP_TIMES_ROMAN_24);
 
 	void iSpecialKeyBoard();*/
 	if (HomePage == 1){
-	drawHomepage();
+		drawHomepage();
 
 	}
 	else if (startPage == 1){
 		drawStartpage();
 	}
-	
+
+	if (arrowclick == 1 && char_stand == 1){
+		arrowAttack();
+		stand_count++;
+		if (stand_count >= 20){
+			stand_count = 0;
+			charIndex = 0;
+			char_stand = 0;
+		}
+	}
+
 }
 
 
@@ -85,9 +101,7 @@ void iMouse(int button, int state, int mx, int my)
 		if (HomePage == 1 && (mx >= 820 && mx <= 947) && (my >= 403 && my <= 458)){
 			startButtonClickHandler();
 		}
-		else if (startPage == 1 && (mx >= 150 && mx <= 244) && (my >= 104 && my <= 293)){
-			arrowclick = 1;
-		}
+
 	}
 
 
@@ -106,9 +120,10 @@ key- holds the ASCII value of the key pressed.
 
 void iKeyboard(unsigned char key)
 {
-	if (key == '\r')
+	if (key == 'a')
 	{
-
+		arrowclick = 1;
+		char_stand = 1;
 	}
 
 
@@ -172,24 +187,24 @@ void drawStartpage(){
 	x -= 0.05;
 	if (x < -600)
 		x = 0;
-	
-	iShowImage(0, -120, 400, 319, f);
-	iShowImage(150, 100, 100, 200, stand);
 
-	if (arrowclick == 1){
-		arrowAttack();
+	iShowImage(0, -120, 400, 319, f);
+	if (char_stand == 0){
+		iShowImage(150, 100, 100, 200, stand);
 	}
 
-	
-	
-	
+
+
+
 }
 void arrowAttack(){
 
-	for (charIndex = 0; charIndex <= 12; charIndex++){
-		iShowImage(0, 100, 300, 400, load[charIndex]);
+	iShowBMP2(char_x + 150, char_y + 100, load[charIndex], 0);
+	charIndex++;
+	if (charIndex >= 12){
+		charIndex = 0;
+
 	}
-	charIndex = 0;
 
 }
 void startButtonClickHandler(){
@@ -200,10 +215,10 @@ void startButtonClickHandler(){
 
 int main()
 {
-
+	iSetTimer(-900000, arrowAttack);
 	iInitialize(1200, 600, "Project Title");
 	a = iLoadImage("./images/starting.bmp"),
-	c = iLoadImage("./images/3.bmp");
+		c = iLoadImage("./images/3.bmp");
 	e = iLoadImage("./images/11.1.png");
 
 	d = iLoadImage("./images/level1.bmp");
@@ -212,18 +227,6 @@ int main()
 
 	stand = iLoadImage("./images/11.1.png");
 
-	load[0] = iLoadImage("./images/char1.png");
-	load[1] = iLoadImage("./images/char2.png");
-	load[2] = iLoadImage("./images/char3.png");
-	load[3] = iLoadImage("./images/char4.png");
-	load[4] = iLoadImage("./images/char5.png");
-	load[5] = iLoadImage("./images/char6.png");
-    load[6] = iLoadImage("./images/char7.png");
-	load[7] = iLoadImage("./images/char8.png");
-	load[8] = iLoadImage("./images/char9.png");
-	load[9] = iLoadImage("./images/char10.png");
-	load[10] = iLoadImage("./images/char11.png");
-	load[11] = iLoadImage("./images/char12.png");
 
 	iStart();
 	return 0;
