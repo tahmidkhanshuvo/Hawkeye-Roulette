@@ -14,7 +14,7 @@ int dy = 10;
 //-------------menu page properties------------
 
 void drawHomepage();
-int HomePage = 1;
+int HomePage = 0;
 
 
 //-------startpage properties(level 1)-------
@@ -57,7 +57,7 @@ int v1_stand = 1;
 void iDraw()
 {
 	iClear();
-	/*iShowImage(x, y, 1200, 600, a);
+	iShowImage(x, y, 1200, 600, a);
 	iShowImage(x + 1200, y, 1200, 600, a);
 	x -= 0.05;
 	if (x < -600)
@@ -66,7 +66,6 @@ void iDraw()
 	iSetColor(r, g, b);
 	iText(100, 100, "Press F2 to start", GLUT_BITMAP_TIMES_ROMAN_24);
 
-	void iSpecialKeyBoard();*/
 	if (HomePage == 1){
 		drawHomepage();
 
@@ -177,11 +176,11 @@ void iSpecialKeyboard(unsigned char key)
 	{
 
 	}
-	else if (key == GLUT_KEY_F2){
-		if (HomePage == 1){
-			drawHomepage();
-
-		}
+	else if (key == GLUT_KEY_F2)
+	{
+		
+		HomePage = 1;
+	
 	}
 
 }
