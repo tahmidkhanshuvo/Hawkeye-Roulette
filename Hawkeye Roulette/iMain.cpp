@@ -8,14 +8,18 @@ int r = 255;
 int g = 255;
 int b = 255;;
 
+int a;
+
 void iDraw()
 {
 	iClear();
-	iFilledCircle(x + 193, y + 400, 45);
+	iShowBMP(x, y, "Images\\test.bmp");
+	iShowImage(100, 100, 300, 300, a);
+	/*iFilledCircle(x + 193, y + 400, 45);
 	iFilledCircle(x + 385, y + 400, 45);
 	iRectangle(x + 100, y + 250, 380, 250);
 	iLine(x + 193, y + 300, x + 385, y + 300);
-	iSetColor(r, g, b);
+	iSetColor(r, g, b);*/
 
 }
 
@@ -144,7 +148,8 @@ void iSpecialKeyboard(unsigned char key)
 int main()
 {
 	///srand((unsigned)time(NULL));
-	iInitialize(1200, 700, "Play With Box");
+	iInitialize(1000, 600, "Play With Box");
+	a = iLoadImage("./Images/test.png");
 	///updated see the documentations
 	iStart();
 	return 0;
