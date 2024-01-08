@@ -27,17 +27,20 @@ int startPage = 0;
 //---------------------------------------------------- main charecter properties----------------------------------------------
 
 void arrowAttack();
+void arrowLaunch();
 int stand;
-char load[12][25] = { "images\\character1.bmp", "images\\character2.bmp", "images\\character3.bmp", "images\\character4.bmp", "images\\character5.bmp", "images\\character6.bmp", "images\\character7.bmp", "images\\character8.bmp", "images\\character9.bmp", "images\\character10.bmp", "images\\character11.bmp", "images\\character12.bmp" };
+char charecter[23][25] = { "images\\character1.bmp", "images\\character2.bmp", "images\\character3.bmp", "images\\character4.bmp", "images\\character5.bmp", "images\\character6.bmp", "images\\character7.bmp", "images\\character8.bmp", "images\\character9.bmp", "images\\character10.bmp", "images\\character11.bmp", "images\\character12.bmp", "images\\character11.bmp", "images\\character10.bmp", "images\\character9.bmp", "images\\character8.bmp", "images\\character7.bmp", "images\\character6.bmp", "images\\character5.bmp", "images\\character4.bmp", "images\\character3.bmp", "images\\character2.bmp", "images\\character1.bmp" };
 int arrowclick = 0;
 int charIndex = 0;
 
 int char_x = 0;
 int char_y = 0;
-int char_stand = 0;
+int char_stand = 1;
 int stand_count = 0;
 
 int a_launch = 0;
+float a_x = 130; 
+float a_y = 180;
 
 //------------------------------------------------vilain properies for level1--------------------------------------------------------------
 
@@ -74,15 +77,15 @@ void iDraw()
 		drawStartpage();
 	}
 
-	if (arrowclick == 1 && char_stand == 1){
+	if (arrowclick == 1 && char_stand == 0){
 		arrowAttack();
 		
 	}
 
-	/*if (a_launch == 1){
+	if (a_launch == 1){
 
-		iShowImage(150, 100, 50, 50, arrow);
-	}*/
+		arrowLaunch();
+	}
 
 	if (v1_attack == 1 && startPage == 1){
 		villain1();
@@ -142,7 +145,7 @@ void iKeyboard(unsigned char key)
 	if (key == 'a')
 	{
 		arrowclick = 1;
-		char_stand = 1;
+		char_stand = 0;
 		a_launch = 1;
 	}
 
@@ -209,7 +212,7 @@ void drawStartpage(){
 		x = 0;
 
 	iShowImage(0, -120, 400, 319, f);
-	if (char_stand == 0){
+	if (char_stand == 1){
 		iShowImage(150, 100, 100, 200, stand);
 	}
 	if (v1_stand == 1){
@@ -222,7 +225,7 @@ void drawStartpage(){
 void arrowAttack(){
 
 
-	iShowBMP2(char_x + 150, char_y + 100, load[charIndex], 0);
+	iShowBMP2(char_x + 150, char_y + 100, charecter[charIndex], 0);
 	charIndex++;
 	if (charIndex >= 12){
 		charIndex = 0;
@@ -232,10 +235,24 @@ void arrowAttack(){
 	if (stand_count >= 12){
 		stand_count = 0;
 		charIndex = 0;
-		char_stand = 0;
+		char_stand = 1;
 	}
 
 }
+void arrowLaunch(){
+
+
+	iShowImage(a_x , a_y, 120, 40, arrow);
+	a_x += 1;
+	a_y -= 0.05;
+	if (a_x > 900)
+	{
+		a_launch = 0;
+		a_x = 140;
+		a_y = 180;
+	}
+}
+
 void villain1(){
 
 	iShowBMP2(v1_x+900, v1_y+ 50, v1[v1_index], 0);
@@ -258,8 +275,9 @@ void startButtonClickHandler(){
 
 int main()
 {
-	iSetTimer(1000, arrowAttack);
-	iSetTimer(200, villain1);
+	iSetTimer(5000, arrowAttack);
+	iSetTimer(10000, villain1);
+	iSetTimer(5, arrowLaunch);
 
 	iInitialize(1200, 600, "Project Title");
 	a = iLoadImage("./images/starting.bmp"),
@@ -274,7 +292,7 @@ int main()
 	stand = iLoadImage("./images/11.1.png");
 	stand2 = iLoadImage("./images/v1.bmp");
 
-	arrow = iLoadImage("./images/arrow.bmp");
+	arrow = iLoadImage("./images/arrow.png");
 
 
 	iStart();
