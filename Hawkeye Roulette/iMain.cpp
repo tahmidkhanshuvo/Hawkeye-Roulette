@@ -28,6 +28,7 @@ int startPage = 0;
 
 void arrowAttack();
 void arrowLaunch();
+void characterMotion();
 int stand;
 char charecter[23][25] = { "images\\character1.bmp", "images\\character2.bmp", "images\\character3.bmp", "images\\character4.bmp", "images\\character5.bmp", "images\\character6.bmp", "images\\character7.bmp", "images\\character8.bmp", "images\\character9.bmp", "images\\character10.bmp", "images\\character11.bmp", "images\\character12.bmp", "images\\character11.bmp", "images\\character10.bmp", "images\\character9.bmp", "images\\character8.bmp", "images\\character7.bmp", "images\\character6.bmp", "images\\character5.bmp", "images\\character4.bmp", "images\\character3.bmp", "images\\character2.bmp", "images\\character1.bmp" };
 int arrowclick = 0;
@@ -53,7 +54,20 @@ char v1[6][25] = { "images\\v1.bmp", "images\\v2.bmp", "images\\v3.bmp", "images
 int v1_index = 0;
 int v1_attack = 1;
 int v1_count = 0;
-int v1_stand = 1;
+int v1_stand = 0;
+
+void vilmotion(){
+	v1_index++;
+	if (v1_index >= 6){
+		v1_index = 0;
+	}
+	v1_count++;
+	if (v1_count >= 6){
+		v1_count = 0;
+		v1_index = 0;
+		v1_stand = 0;
+	}
+}
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
@@ -226,24 +240,27 @@ void arrowAttack(){
 
 
 	iShowBMP2(char_x + 150, char_y + 100, charecter[charIndex], 0);
+	
+
+}
+void characterMotion(){
 	charIndex++;
-	if (charIndex >= 12){
+	if (charIndex >= 23){
 		charIndex = 0;
 
 	}
 	stand_count++;
-	if (stand_count >= 12){
+	if (stand_count >= 23){
 		stand_count = 0;
 		charIndex = 0;
 		char_stand = 1;
 	}
-
 }
 void arrowLaunch(){
 
 
 	iShowImage(a_x , a_y, 120, 40, arrow);
-	a_x += 1;
+	a_x += 5;
 	a_y -= 0.05;
 	if (a_x > 900)
 	{
@@ -256,16 +273,7 @@ void arrowLaunch(){
 void villain1(){
 
 	iShowBMP2(v1_x+900, v1_y+ 50, v1[v1_index], 0);
-	v1_index++;
-	if (v1_index >= 6){
-		v1_index = 0;
-	}
-	v1_count++;
-	if (v1_count >= 6){
-		v1_count = 0;
-		v1_index = 0;
-		v1_stand = 0;
-	}
+	
 }
 void startButtonClickHandler(){
 	HomePage = 0;
@@ -275,11 +283,8 @@ void startButtonClickHandler(){
 
 int main()
 {
-	iSetTimer(5000, arrowAttack);
-	iSetTimer(10000, villain1);
-	iSetTimer(5, arrowLaunch);
-
 	iInitialize(1200, 600, "Project Title");
+
 	a = iLoadImage("./images/starting.bmp"),
 	c = iLoadImage("./images/3.bmp");
 	e = iLoadImage("./images/charMenu.png");
@@ -293,7 +298,9 @@ int main()
 	stand2 = iLoadImage("./images/v1.bmp");
 
 	arrow = iLoadImage("./images/arrow.png");
-
+	iSetTimer(100, characterMotion);
+	iSetTimer(100, vilmotion);
+	
 
 	iStart();
 	return 0;
