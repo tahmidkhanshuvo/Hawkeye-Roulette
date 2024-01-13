@@ -10,19 +10,46 @@ int b = 255;;
 
 int a;
 
+float ox = 180;
+float oy = 225;
+
+int shooot = 0;
+
+void shoot(){
+
+	if (shooot == 1){
+		ox += 5;
+		if (oy != y + 225)
+		{
+			float abs = (x + 800) / ox;
+			oy += ((y + 225) - oy) / abs;
+		}
+
+		if (ox >= x + 800 && oy == y + 225)
+		{
+			ox = 180;
+			oy = 225;
+			shooot = 0;
+
+		}
+
+		iSetTimer(50, shoot);
+	}
+}
+
 void iDraw()
 {
 	iClear();
-	iShowBMP(x, y, "Images\\test.bmp");
-	iShowImage(100, 100, 300, 300, a);
-	/*iFilledCircle(x + 193, y + 400, 45);
-	iFilledCircle(x + 385, y + 400, 45);
-	iRectangle(x + 100, y + 250, 380, 250);
-	iLine(x + 193, y + 300, x + 385, y + 300);
-	iSetColor(r, g, b);*/
 
+	iSetColor(r, g, b);
+	iFilledRectangle(150, 150, 30, 150);
+	iFilledRectangle(x + 800, y + 150, 30, 150);
+	if (shooot == 1)
+	{ iFilledRectangle(ox, oy, 20, 20);}
+	
+
+	
 }
-
 
 
 
@@ -48,7 +75,7 @@ void iMouse(int button, int state, int mx, int my)
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
 
-		
+	
 	}
 	
 	
@@ -71,6 +98,7 @@ void iKeyboard(unsigned char key)
 		r = 255;
 		g = 0;
 		b = 0;
+		
 	}
 	else if (key == 'g')
 	{
@@ -100,6 +128,13 @@ void iKeyboard(unsigned char key)
 	{
 		x+=10;
 	}
+
+	else if (key == 'e')
+	{
+		shooot = 1;
+		iSetTimer(10, shoot);
+	}
+
 	
 	
 }
@@ -147,10 +182,7 @@ void iSpecialKeyboard(unsigned char key)
 
 int main()
 {
-	///srand((unsigned)time(NULL));
 	iInitialize(1000, 600, "Play With Box");
-	a = iLoadImage("./Images/test.png");
-	///updated see the documentations
 	iStart();
 	return 0;
 }
