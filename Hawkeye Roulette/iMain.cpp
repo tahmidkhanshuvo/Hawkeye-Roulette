@@ -13,22 +13,32 @@ int a;
 float ox = 180;
 float oy = 225;
 
+int herox = 150;
+int heroy = 150;
+int shootx = 30;
+int shooty = 75;
+
+int vilx = x + 800;
+int vily = y + 150;
+int vilhitx = 30;
+int vilhity = 75;
+
 int shooot = 0;
 
 void shoot(){
 
 	if (shooot == 1){
 		ox += 5;
-		if (oy != y + 225)
+		if (oy != vily+75)
 		{
-			float abs = (x + 800) / ox;
-			oy += ((y + 225) - oy) / abs;
+			float abs = (vilx) / ox;
+			oy += ((vily+vilhity) - oy) / abs;
 		}
 
-		if (ox >= x + 800 && oy == y + 225)
+		if (ox >= vilx && oy == vily+vilhity)
 		{
-			ox = 180;
-			oy = 225;
+			ox = herox+shootx;
+			oy = heroy+shooty;
 			shooot = 0;
 
 		}
@@ -42,8 +52,8 @@ void iDraw()
 	iClear();
 
 	iSetColor(r, g, b);
-	iFilledRectangle(150, 150, 30, 150);
-	iFilledRectangle(x + 800, y + 150, 30, 150);
+	iFilledRectangle(herox, heroy, 30, 150);
+	iFilledRectangle(vilx, vily, 30, 150);
 	if (shooot == 1)
 	{ iFilledRectangle(ox, oy, 20, 20);}
 	
@@ -114,19 +124,19 @@ void iKeyboard(unsigned char key)
 	}
 	else if (key == 'w')
 	{
-		y+=10;
+		vily+=10;
 	}
 	else if (key == 's')
 	{
-		y-=10;
+		vily-=10;
 	}
 	else if (key == 'a')
 	{
-		x-=10;
+		vilx-=10;
 	}
 	else if (key == 'd')
 	{
-		x+=10;
+		vilx+=10;
 	}
 
 	else if (key == 'e')
@@ -154,22 +164,22 @@ void iSpecialKeyboard(unsigned char key)
 	
 	if (key == GLUT_KEY_RIGHT)
 	{
-		x += 10;
+		vilx += 10;
 	}
 
 	if (key == GLUT_KEY_LEFT)
 	{
-		x -= 10;
+		vilx -= 10;
 	}
 
 	if (key == GLUT_KEY_UP)
 	{
-		y += 10;
+		vily += 10;
 	}
 
 	if (key == GLUT_KEY_DOWN)
 	{
-		y -= 10;
+		vily -= 10;
 	}
 	
 	if (key == GLUT_KEY_HOME)
