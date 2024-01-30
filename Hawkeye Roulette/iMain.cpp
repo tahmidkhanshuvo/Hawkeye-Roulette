@@ -2,6 +2,10 @@
 
 <<<<<<< Updated upstream
 =======
+//:::::::::::::Idraw Here:::::::::::::://
+int x = 0;
+int y = 0;
+>>>>>>> Stashed changes
 
 int a, c, d, e;
 float x = 0;
@@ -15,6 +19,23 @@ int dy = 10;
 
 
 =======
+
+//:::::::::::::Music and Menu Variables:::::::::::://
+int musicOn;
+int menu;
+int rules;
+int credit;
+int gameOn = 0;
+
+
+
+int homePage = 1;
+int mission1Page = 0;
+int instructPage = 0;
+int hscorePage = 0;
+int creditPage = 0;
+
+//::::::::::Hero Character Variables:::::::::://
 >>>>>>> Stashed changes
 
 void drawHomepage();
@@ -22,6 +43,93 @@ int HomePage = 1;
 
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+// Villain Character Variables
+
+int vilx = 800;
+int vily = 150;
+int vilhitx = 30;
+int vilhity = 75;
+int vshootx = 30;
+int vshooty = 75;
+
+
+// Using for Shoot function
+float ox = herox + shootx;
+float oy = heroy + shooty;
+float vox = vilx - vshootx;
+float voy = vily + vshooty;
+int shooot = 0;
+int vshooot = 0; //Shoot Flag
+
+void shoot(){
+
+	if (shooot == 1){
+		ox += 5;
+		if (oy != vily+vilhity)
+		{
+			float abs = (vilx) / ox;
+			oy += ((vily+vilhity) - oy) / abs;
+		}
+
+		if (ox >= vilx && oy == vily+vilhity)
+		{
+			ox = herox+shootx;
+			oy = heroy+shooty;
+			shooot = 0;
+
+		}
+
+		//iSetTimer(50, shoot);
+	}
+}
+>>>>>>> Stashed changes
+
+void vshoot(){
+	if (vshooot == 1){
+		vox -= 5;
+		if (voy != heroy + 75)
+		{
+			float abs = (vilx) / vox;
+			voy += ((vily + 75) - voy) / abs;
+		}
+		if (vox <= herox+30 && voy == heroy + 75)
+		{
+			vox = vilx - vshootx;
+			voy = vily + vshooty;
+			vshooot = 0;
+		}
+
+		//iSetTimer(50, vshoot);
+	}
+}
+
+//::::::::::Function Skeletions:::::::::::::::://
+
+void funcGameOver();
+void funcMissionOver();
+
+void drawHomePage();
+void drawHscorePage();
+void drawInstructPage();
+void drawGamePage();
+void drawCreditPage();
+void drawMapPage();
+void drawScreen();
+void collision();
+
+void Run();
+
+void startButtonClickHandler();
+void creditButtonClickHandler();
+void mapButtonClickHandler();
+void instructButtonClickHandler();
+void hscoreButtonClickHandler();
+
+void mission1ButtonClickHandler();
+
+void backButtonClickHandler();
+
+//::::::::::::::iDraw:::::::::::::::::::::::::://
 
 void iDraw()
 {
@@ -45,6 +153,29 @@ void iDraw()
 	//	iFilledRectangle(0, 0, 1280, 720);
 	//	iShowBMP2(0, 0, "image\\instruction.bmp", 0);
 	//	iShowImage(0, 0, 1366, 768, menu);
+
+    if (homePage == 1)
+	{
+		drawHomePage();
+	}
+	else if (hscorePage == 1)
+	{
+		drawHscorePage();
+	}
+	else if (instructPage == 1)
+	{
+		drawInstructPage();
+	}
+	else if (gameOn == 1)
+	{
+		drawGamePage();
+	}
+	else if (creditPage == 1)
+	{
+		drawCreditPage();
+	}
+
+>>>>>>> Stashed changes
 }
 
 
@@ -60,6 +191,7 @@ void iMouseMove(int mx, int my)
 {
 
 }
+//***********ipassiveMouse*************//
 void iPassiveMouseMove(int mx, int my)
 {
 
@@ -72,8 +204,40 @@ void iMouse(int button, int state, int mx, int my)
 	{
 		{
 			printf("x=%d     y=%d\n", mx, my);
+
+<<<<<<< Updated upstream
+
 =======
+			if (homePage == 1 && (mx >= 791 && mx <= 1059) && (my >= 445 && my <= 491))   //start
 			{
+				startButtonClickHandler();
+			}
+			else if (homePage == 1 && (mx >= 914 && mx <= 1117) && (my >= 593 && my <= 641))    //edited
+			{
+				instructButtonClickHandler();
+			}
+			else if (homePage == 1 && (mx >= 966 && mx <= 1166) && (my >= 184 && my <= 235))   //edited
+			{
+				hscoreButtonClickHandler();
+			}
+			else if (homePage == 1 && (mx >= 665 && mx <= 872) && (my >= 185 && my <= 234))   //edited
+			{
+				creditButtonClickHandler();
+			}
+
+			else if (homePage == 1 && (mx >= 77 && mx <= 124) && (my >= 661 && my <= 707))
+			{
+				if (musicOn)
+				{
+					musicOn = false;
+					PlaySound(0, 0, 0);
+				}
+				else
+				{
+					musicOn = true;
+					PlaySound("music\\bgmusic.wav", NULL, SND_LOOP | SND_ASYNC);
+				}
+			}
 
 
 		}
@@ -105,7 +269,11 @@ void iKeyboard(unsigned char key)
 <<<<<<< Updated upstream
 
 =======
+	else if (key == 'i')
 	{
+		vshooot = 1;
+		iSetTimer(10, vshoot);
+	}
 
 	
 	
@@ -156,6 +324,100 @@ void drawHomepage(){
 
 //:::::::::::Handlers::::::::::::::::://
 
+void startButtonClickHandler()
+{
+	gameOn = 1;
+	homePage = 0;
+	instructPage = 0;
+	hscorePage = 0;
+	creditPage = 0;
+}
+
+void instructButtonClickHandler(){
+	homePage = 0;
+	gameOn = 0;
+	instructPage = 1;
+	hscorePage = 0;
+	creditPage = 0;
+}
+void hscoreButtonClickHandler(){
+	homePage = 0;
+	instructPage = 0;
+	hscorePage = 1;
+	creditPage = 0;
+	gameOn = 0;
+}
+void creditButtonClickHandler()
+{
+	homePage = 0;
+	mission1Page = 0;
+	instructPage = 0;
+	hscorePage = 0;
+	creditPage = 1;
+	gameOn = 0;
+}
+void backButtonClickHandler()
+{
+	homePage = 1;
+	mission1Page = 0;
+	instructPage = 0;
+	hscorePage = 0;
+	creditPage = 0;
+	gameOn = 0;
+}
+
+
+//:::::::::::::::Drawing Functions:::::::::::://
+
+void drawHomePage()
+{
+	if (musicOn){
+		iSetColor(128, 128, 128);
+		iFilledRectangle(0, 0, 1366, 728);
+		iShowBMP2(0, 0, "image\\homemusic.bmp", 0);
+	}
+	else if (!musicOn){
+		iSetColor(128, 128, 128);
+		iFilledRectangle(0, 0, 1366, 728);
+		iShowBMP2(0, 0, "image\\homemute.bmp", 0);
+	}
+
+}
+
+void drawGamePage()
+{
+	iSetColor(r, g, b);
+	iFilledRectangle(herox, heroy, 30, 150);
+	iFilledRectangle(vilx, vily, 30, 150);
+
+	if (shooot == 1)
+	{
+		iFilledRectangle(ox, oy, 20, 20);
+	}
+
+	if (vshooot == 1)
+	{
+		iFilledRectangle(vox, voy, 20, 20);
+	}
+}
+
+void drawHscorePage(){
+	iFilledRectangle(0, 0, 1366, 728);
+	iShowBMP2(0, 0, "image\\highscore.bmp", 0);
+}
+void drawInstructPage(){
+	iFilledRectangle(0, 0, 1366, 728);
+	iShowBMP2(0, 0, "image\\instruction.bmp", 0);
+}
+
+void drawCreditPage()
+{
+	iFilledRectangle(0, 0, 1366, 728);
+	iShowBMP2(0, 0, "image\\credits.bmp", 0);
+}
+
+
+//::::::::::::iMain:::::::::::::::::://
 
 int main()
 {
@@ -167,5 +429,12 @@ int main()
 =======
 	iInitialize(1366, 728, "Play With Box");
 
+	if (musicOn)
+	{
+		PlaySound("music\\bgmusic.wav", NULL, SND_LOOP | SND_ASYNC);
+	}
+
+	iStart();
+>>>>>>> Stashed changes
 	return 0;
 }
