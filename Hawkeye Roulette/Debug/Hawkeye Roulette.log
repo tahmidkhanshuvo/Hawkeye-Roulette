@@ -1,15 +1,4 @@
-<<<<<<< Updated upstream
-﻿Build started 1/6/2024 5:05:57 PM.
-     1>Project "C:\Users\Hp\Documents\GitHub\Hawkeye-Roulette\Hawkeye Roulette\Hawkeye Roulette.vcxproj" on node 2 (Build target(s)).
-     1>Link:
-         Hawkeye Roulette.vcxproj -> C:\Users\Hp\Documents\GitHub\Hawkeye-Roulette\Debug\Hawkeye Roulette.exe
-     1>Done Building Project "C:\Users\Hp\Documents\GitHub\Hawkeye-Roulette\Hawkeye Roulette\Hawkeye Roulette.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:02.56
-=======
-﻿Build started 30/01/2024 12:21:50.
+﻿Build started 30/01/2024 12:57:59.
      1>Project "C:\Users\Tahmid\Documents\Hawkeye-Roulette\Hawkeye Roulette\Hawkeye Roulette.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt iMain.cpp
@@ -21,5 +10,4 @@ Time Elapsed 00:00:02.56
 
 Build succeeded.
 
-Time Elapsed 00:00:02.94
->>>>>>> Stashed changes
+Time Elapsed 00:00:05.74

@@ -1,24 +1,16 @@
 #include "iGraphics.h"
 
-<<<<<<< Updated upstream
-=======
-//:::::::::::::Idraw Here:::::::::::::://
+
+
 int x = 0;
 int y = 0;
->>>>>>> Stashed changes
 
-int a, c, d, e;
-float x = 0;
-float y = 0;
 int r = 255;
 int g = 255;
 int b = 255;
-<<<<<<< Updated upstream
+
 int dx = 10;
 int dy = 10;
-
-
-=======
 
 //:::::::::::::Music and Menu Variables:::::::::::://
 int musicOn;
@@ -35,14 +27,13 @@ int instructPage = 0;
 int hscorePage = 0;
 int creditPage = 0;
 
-//::::::::::Hero Character Variables:::::::::://
->>>>>>> Stashed changes
+//Hero Character Variables
 
-void drawHomepage();
-int HomePage = 1;
+int herox = 150;
+int heroy = 150;
+int shootx = 30;
+int shooty = 75;
 
-
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 // Villain Character Variables
 
 int vilx = 800;
@@ -82,7 +73,7 @@ void shoot(){
 		//iSetTimer(50, shoot);
 	}
 }
->>>>>>> Stashed changes
+
 
 void vshoot(){
 	if (vshooot == 1){
@@ -134,26 +125,8 @@ void backButtonClickHandler();
 void iDraw()
 {
 	iClear();
-	iShowImage(x, y, 1200, 600, a);
-	iShowImage(x + 1200, y, 1200, 600, a);
-	x -= 0.05;
-	if (x < -600)
-		x = 0;
-
-<<<<<<< Updated upstream
-	iSetColor(r, g, b);
-	iText(100, 100, "Press F2 to start", GLUT_BITMAP_TIMES_ROMAN_24);
-
-	void iSpecialKeyBoard();
-	/*if (HomePage == 1){
-	drawHomepage();
-
-	}*/
-=======
-	//	iFilledRectangle(0, 0, 1280, 720);
-	//	iShowBMP2(0, 0, "image\\instruction.bmp", 0);
-	//	iShowImage(0, 0, 1366, 768, menu);
-
+	
+	
     if (homePage == 1)
 	{
 		drawHomePage();
@@ -175,7 +148,6 @@ void iDraw()
 		drawCreditPage();
 	}
 
->>>>>>> Stashed changes
 }
 
 
@@ -205,9 +177,6 @@ void iMouse(int button, int state, int mx, int my)
 		{
 			printf("x=%d     y=%d\n", mx, my);
 
-<<<<<<< Updated upstream
-
-=======
 			if (homePage == 1 && (mx >= 791 && mx <= 1059) && (my >= 445 && my <= 491))   //start
 			{
 				startButtonClickHandler();
@@ -241,7 +210,6 @@ void iMouse(int button, int state, int mx, int my)
 
 
 		}
->>>>>>> Stashed changes
 	}
 
 
@@ -260,24 +228,52 @@ key- holds the ASCII value of the key pressed.
 
 void iKeyboard(unsigned char key)
 {
-	if (key == '\r')
+	if (key == 'r')
 	{
+		r = 255;
+		g = 0;
+		b = 0;
 
 	}
+	else if (key == 'g')
+	{
+		g = 255;
+		r = 0;
+		b = 0;
+	}
+	else if (key == 'b')
+	{
+		b = 255;
+		r = 0;
+		g = 0;
+	}
+	else if (key == 'w')
+	{
+		vily += 10;
+	}
+	else if (key == 's')
+	{
+		vily -= 10;
+	}
+	else if (key == 'a')
+	{
+		vilx -= 10;
+	}
+	else if (key == 'd')
+	{
+		vilx += 10;
+	}
 
-
-<<<<<<< Updated upstream
-
-=======
+	else if (key == 'e')
+	{
+		shooot = 1;
+		iSetTimer(10, shoot);
+	}
 	else if (key == 'i')
 	{
 		vshooot = 1;
-		iSetTimer(10, vshoot);
 	}
 
-	
-	
->>>>>>> Stashed changes
 }
 
 /*
@@ -306,19 +302,10 @@ void iSpecialKeyboard(unsigned char key)
 	{
 
 	}
-	else if (key == GLUT_KEY_F2){
-		if (HomePage == 1){
-			drawHomepage();
+	else if (key == GLUT_KEY_F2)
+	{
 
-		}
 	}
-
-}
-void drawHomepage(){
-	iSetColor(128, 128, 128);
-	iFilledRectangle(0, 0, 1200, 600);
-	iShowBMP2(0, 0, "./images/menu.bmp", 0);
-	iShowBMP2(0, 0, "./images/menu.bmp", 0);
 
 }
 
@@ -421,12 +408,7 @@ void drawCreditPage()
 
 int main()
 {
-<<<<<<< Updated upstream
 
-	iInitialize(1200, 600, "Project Title");
-	a = iLoadImage("./images/starting.bmp"),
-		iStart();
-=======
 	iInitialize(1366, 728, "Play With Box");
 
 	if (musicOn)
@@ -435,6 +417,6 @@ int main()
 	}
 
 	iStart();
->>>>>>> Stashed changes
+
 	return 0;
 }
