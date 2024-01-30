@@ -1,5 +1,7 @@
 #include "iGraphics.h"
 
+<<<<<<< Updated upstream
+=======
 
 int a, c, d, e;
 float x = 0;
@@ -7,10 +9,13 @@ float y = 0;
 int r = 255;
 int g = 255;
 int b = 255;
+<<<<<<< Updated upstream
 int dx = 10;
 int dy = 10;
 
 
+=======
+>>>>>>> Stashed changes
 
 void drawHomepage();
 int HomePage = 1;
@@ -27,6 +32,7 @@ void iDraw()
 	if (x < -600)
 		x = 0;
 
+<<<<<<< Updated upstream
 	iSetColor(r, g, b);
 	iText(100, 100, "Press F2 to start", GLUT_BITMAP_TIMES_ROMAN_24);
 
@@ -35,6 +41,10 @@ void iDraw()
 	drawHomepage();
 
 	}*/
+=======
+	//	iFilledRectangle(0, 0, 1280, 720);
+	//	iShowBMP2(0, 0, "image\\instruction.bmp", 0);
+	//	iShowImage(0, 0, 1366, 768, menu);
 }
 
 
@@ -50,7 +60,6 @@ void iMouseMove(int mx, int my)
 {
 
 }
-//*******************************************************************ipassiveMouse***********************************************************************//
 void iPassiveMouseMove(int mx, int my)
 {
 
@@ -61,8 +70,14 @@ void iMouse(int button, int state, int mx, int my)
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
+		{
+			printf("x=%d     y=%d\n", mx, my);
+=======
+			{
 
 
+		}
+>>>>>>> Stashed changes
 	}
 
 
@@ -87,7 +102,14 @@ void iKeyboard(unsigned char key)
 	}
 
 
+<<<<<<< Updated upstream
 
+=======
+	{
+
+	
+	
+>>>>>>> Stashed changes
 }
 
 /*
@@ -132,12 +154,18 @@ void drawHomepage(){
 
 }
 
+//:::::::::::Handlers::::::::::::::::://
+
 
 int main()
 {
+<<<<<<< Updated upstream
 
 	iInitialize(1200, 600, "Project Title");
 	a = iLoadImage("./images/starting.bmp"),
 		iStart();
+=======
+	iInitialize(1366, 728, "Play With Box");
+
 	return 0;
 }
