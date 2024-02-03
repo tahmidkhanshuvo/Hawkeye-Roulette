@@ -93,6 +93,13 @@ int vilhity = 75;
 int vshootx = 30;
 int vshooty = 75;
 
+// Define the range for x and y coordinates within which the villain can appear
+int minX = 300;  // Adjust these values based on your game's requirements
+int maxX = 1300;
+int minY = 100;
+int maxY = 600;
+int villainlife = 10;
+
 
 // Using for Shoot function
 float ox = herox + shootx;
@@ -105,17 +112,13 @@ int vshooot = 0; //Shoot Flag
 
 //::::::::::::::::::::::::::Action Functions:::::::::::::::::::::::::::::://
 
-// Function to reset the villain's position to a random location
-void resetVillainPosition() {
-	// Define the range for x and y coordinates within which the villain can appear
-	int minX = 300;  // Adjust these values based on your game's requirements
-	int maxX = 1300;
-	int minY = 100;
-	int maxY = 600;
+// Function to reset the villain's position to a random location and reset it's life
+void resetVillain() {
 
 	// Set the villain's position to a random location within the specified range
 	vilx = rand() % (maxX - minX + 1) + minX;
 	vily = rand() % (maxY - minY + 1) + minY;
+	villainlife = 10;
 }
 
 void shoot(){
@@ -138,8 +141,12 @@ void shoot(){
 		if ((ox >= vilx && oy >= vily + vilhity) || (ox >= vilx && oy <= vily + vilhity)) {
 			ox = herox + shootx;
 			oy = heroy + shooty;
+			villainlife -= 5;
 			shooot = 0;  // Reset shooot after shooting
-			resetVillainPosition();  // Reset villain's position when killed
+
+			if (villainlife == 0){
+				resetVillain();     // Reset villain's position and life when killed
+			}  
 		}
 	}
 	iSetTimer(10, shoot);
