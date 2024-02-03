@@ -45,6 +45,7 @@
 #include <iostream>
 #include <cmath>
 #include <chrono>
+#include <cstdlib>
 #include "header\iGraphics.h"
 #include "header\collision.h"
 
@@ -104,6 +105,19 @@ int vshooot = 0; //Shoot Flag
 
 //::::::::::::::::::::::::::Action Functions:::::::::::::::::::::::::::::://
 
+// Function to reset the villain's position to a random location
+void resetVillainPosition() {
+	// Define the range for x and y coordinates within which the villain can appear
+	int minX = 300;  // Adjust these values based on your game's requirements
+	int maxX = 1300;
+	int minY = 100;
+	int maxY = 600;
+
+	// Set the villain's position to a random location within the specified range
+	vilx = rand() % (maxX - minX + 1) + minX;
+	vily = rand() % (maxY - minY + 1) + minY;
+}
+
 void shoot(){
 
 	if (shooot == 1) {
@@ -125,10 +139,12 @@ void shoot(){
 			ox = herox + shootx;
 			oy = heroy + shooty;
 			shooot = 0;  // Reset shooot after shooting
+			resetVillainPosition();  // Reset villain's position when killed
 		}
 	}
-	iSetTimer(15, shoot);
+	iSetTimer(10, shoot);
 }
+
 
 
 void vshoot(){
