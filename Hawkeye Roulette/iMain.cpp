@@ -42,6 +42,7 @@
 
 //::::::::::::::::::::Header Files:::::::::::::::::::::::::::::::::::::::://
 
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <cmath>
 #include <chrono>
@@ -64,6 +65,9 @@ int dy = 10;
 
 int ux = 0;
 int uy = 0;
+
+char scoreText[20];
+char vscoreText[20];
 
 //:::::::::::::Music and Menu Variables:::::::::::://
 int musicOn;
@@ -90,6 +94,7 @@ int shooty = 75;
 int jumpHeight = 50;     // Adjust as needed
 float jumpVelocity = 0;  // Initial jump velocity
 bool isJumping = false;  // Flag to indicate if the hero is jumping
+int herolife = 50;
 
 // Villain Character Variables
 
@@ -199,6 +204,7 @@ void vshoot() {
 					vox = vilx - vilhitx;
 					voy = vily + vilhity;
 					vshooot = 0;
+					herolife -= 5;
 
 				}
 			}
@@ -250,15 +256,26 @@ void iDraw()
 	}
 	else if (gameOn == 1)
 	{
-		drawGamePage();
-		updateHeroPosition();
+		if (herolife <= 0){
+			gameOn = 0;
+			homePage = 1;
+			iText(400, 400, "Game Over", GLUT_BITMAP_HELVETICA_18);
+		}
+		else{
+			drawGamePage();
+			updateHeroPosition();
+			drawTraceline();
+			sprintf_s(scoreText, sizeof(scoreText), "Hero Health %d", herolife);
+			iText(15, 700, scoreText, GLUT_BITMAP_HELVETICA_18);
+			sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
+			iText(vilx, vily + 160, vscoreText, GLUT_BITMAP_HELVETICA_18);
+		}
 	}
 	else if (creditPage == 1)
 	{
 		drawCreditPage();
 	}
 
-	drawTraceline();
 }
 
 
