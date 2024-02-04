@@ -45,12 +45,13 @@
 #include <iostream>
 #include <cmath>
 #include <chrono>
+#include <cstdlib>
 #include "header\iGraphics.h"
 #include "header\collision.h"
 
 //::::::::::::::::::::Variables:::::::::::::::::::::::::::::::::::::::://
 
-
+int a, c, d, e, f;
 int x = 0;
 int y = 0;
 
@@ -82,7 +83,11 @@ int herox = 150;
 int heroy = 150;
 int shootx = 30;
 int shooty = 75;
-
+char hero[11][25] = { "image\\hero1.bmp", "image\\hero2.bmp", "image\\hero3.bmp", "image\\hero4.bmp", "image\\hero5.bmp", "image\\hero6.bmp", "image\\hero7.bmp", "image\\hero8.bmp", "image\\hero9.bmp", "image\\hero10.bmp", "image\\hero11.bmp"};
+int hero_index = 0;
+int hero_attack = 0;
+int hero_count = 0;
+int hero_stand = 1;
 // Villain Character Variables
 
 int vilx = 800;
@@ -91,6 +96,18 @@ int vilhitx = 30;
 int vilhity = 75;
 int vshootx = 30;
 int vshooty = 75;
+char v1[6][25] = { "image\\v1.bmp", "image\\v2.bmp", "image\\v3.bmp", "image\\v4.bmp", "image\\v5.bmp", "image\\v6.bmp" };
+int v1_index = 0;
+int v1_attack = 1;
+int v1_count = 0;
+
+
+// Define the range for x and y coordinates within which the villain can appear
+int minX = 300;  // Adjust these values based on your game's requirements
+int maxX = 1300;
+int minY = 100;
+int maxY = 600;
+int villainlife = 10;
 
 
 // Using for Shoot function
@@ -103,6 +120,15 @@ int vshooot = 0; //Shoot Flag
 
 
 //::::::::::::::::::::::::::Action Functions:::::::::::::::::::::::::::::://
+
+// Function to reset the villain's position to a random location and reset it's life
+void resetVillain() {
+
+	// Set the villain's position to a random location within the specified range
+	vilx = rand() % (maxX - minX + 1) + minX;
+	vily = rand() % (maxY - minY + 1) + minY;
+	villainlife = 10;
+}
 
 void shoot(){
 
@@ -124,11 +150,17 @@ void shoot(){
 		if ((ox >= vilx && oy >= vily + vilhity) || (ox >= vilx && oy <= vily + vilhity)) {
 			ox = herox + shootx;
 			oy = heroy + shooty;
+			villainlife -= 5;
 			shooot = 0;  // Reset shooot after shooting
+
+			if (villainlife == 0){
+				resetVillain();     // Reset villain's position and life when killed
+			}
 		}
 	}
-	iSetTimer(15, shoot);
+	iSetTimer(10, shoot);
 }
+
 
 
 void vshoot(){
@@ -139,7 +171,7 @@ void vshoot(){
 			float abs = (vilx) / vox;
 			voy += ((vily + 75) - voy) / abs;
 		}
-		if (vox <= herox+30 && voy == heroy + 75)
+		if (vox <= herox + 30 && voy == heroy + 75)
 		{
 			vox = vilx - vshootx;
 			voy = vily + vshooty;
@@ -149,6 +181,7 @@ void vshoot(){
 		//iSetTimer(50, vshoot);
 	}
 }
+
 
 //::::::::::Function Skeletions:::::::::::::::://
 
@@ -176,13 +209,15 @@ void mission1ButtonClickHandler();
 
 void backButtonClickHandler();
 
+void vilmotion();
+void hero_motion();
 //::::::::::::::iDraw:::::::::::::::::::::::::://
 
 void iDraw()
 {
 	iClear();
-	
-    if (homePage == 1)
+
+	if (homePage == 1)
 	{
 		drawHomePage();
 	}
@@ -321,6 +356,8 @@ void iKeyboard(unsigned char key)
 
 	else if (key == 'e')
 	{
+		hero_attack = 1;
+		hero_stand = 0;
 		shooot = 1;
 		iSetTimer(10, shoot);
 	}
@@ -437,12 +474,23 @@ void drawHomePage()
 void drawGamePage()
 {
 	iSetColor(r, g, b);
-	iFilledRectangle(herox, heroy, 30, 150);
-	iFilledRectangle(vilx, vily, 30, 150);
-
+	iShowImage(0, 0, 1366, 728, a);
+	//iFilledRectangle(herox, heroy, 50, 150);
+	if (hero_stand == 1)
+	{
+		iShowBMP2(herox, heroy, "image\\hero1.bmp", 0);
+	}
+	else if (hero_stand == 0 && hero_attack == 1)
+	{
+		iShowBMP2(herox, heroy, hero[hero_index], 0);
+		
+	}
+	iShowBMP2(vilx, vily, v1[v1_index], 0);
+	
 	if (shooot == 1)
 	{
-		iFilledRectangle(ox, oy, 20, 20);
+		//iFilledRectangle(ox, oy, 100, 20);
+		iShowImage(ox, oy, 100, 25, d);
 	}
 
 	if (vshooot == 1)
@@ -465,7 +513,31 @@ void drawCreditPage()
 	iFilledRectangle(0, 0, 1366, 728);
 	iShowBMP2(0, 0, "image\\credits.bmp", 0);
 }
+void hero_motion(){
+	hero_index++;
+	if (hero_index >= 11){
+		hero_index = 0;
+	}
+	hero_count++;
+	if (hero_count >= 11){
+		hero_count = 0;
+		hero_index = 0;
+		hero_stand = 1;
 
+	}
+}
+void vilmotion(){
+	v1_index++;
+	if (v1_index >= 6){
+		v1_index = 0;
+	}
+	v1_count++;
+	if (v1_count >= 6){
+		v1_count = 0;
+		v1_index = 0;
+		
+	}
+}
 
 //::::::::::::iMain:::::::::::::::::://
 
@@ -473,7 +545,10 @@ int main()
 {
 
 	iInitialize(1366, 728, "Hawkeye Roulette");
-
+	a = iLoadImage("./image/bg_level1.jpg");
+	d = iLoadImage("./image/arrow.png");
+	iSetTimer(100, vilmotion);
+	iSetTimer(200, hero_motion);
 	if (musicOn)
 	{
 		PlaySound("music\\bgmusic.wav", NULL, SND_LOOP | SND_ASYNC);
