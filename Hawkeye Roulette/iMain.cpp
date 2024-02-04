@@ -87,6 +87,10 @@ int heroy = 200;
 int shootx = 30;
 int shooty = 75;
 
+int jumpHeight = 50;     // Adjust as needed
+float jumpVelocity = 0;  // Initial jump velocity
+bool isJumping = false;  // Flag to indicate if the hero is jumping
+
 // Villain Character Variables
 
 int vilx = 800;
@@ -213,8 +217,9 @@ void drawCreditPage();
 void drawMapPage();
 void drawScreen();
 void drawTraceline();
-void collision();
 
+void updateHeroPosition();
+void collision();
 void Run();
 
 void startButtonClickHandler();
@@ -222,9 +227,7 @@ void creditButtonClickHandler();
 void mapButtonClickHandler();
 void instructButtonClickHandler();
 void hscoreButtonClickHandler();
-
 void mission1ButtonClickHandler();
-
 void backButtonClickHandler();
 
 //::::::::::::::iDraw:::::::::::::::::::::::::://
@@ -248,6 +251,7 @@ void iDraw()
 	else if (gameOn == 1)
 	{
 		drawGamePage();
+		updateHeroPosition();
 	}
 	else if (creditPage == 1)
 	{
@@ -435,7 +439,10 @@ void iSpecialKeyboard(unsigned char key)
 	}
 	else if (key == GLUT_KEY_F2)
 	{
-
+		if (!isJumping) {
+			isJumping = true;
+			jumpVelocity = 13.0f;  // Adjust as needed
+		}
 	}
 
 }
@@ -539,6 +546,19 @@ void drawCreditPage()
 void drawTraceline(){
 	if (ux < 500 && uy < 500){
 		iLine(ux, uy, herox, heroy+shooty);
+	}
+}
+
+void updateHeroPosition() {
+	if (isJumping) {
+		heroy += jumpVelocity;
+		jumpVelocity -= 0.5f;  // Gravity effect, adjust as needed
+
+		// Check if the jump is complete (hero is back on the ground)
+		if (heroy <= 150) {
+			heroy = 150;
+			isJumping = false;
+		}
 	}
 }
 
