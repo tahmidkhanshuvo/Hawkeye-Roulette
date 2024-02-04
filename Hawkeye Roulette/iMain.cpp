@@ -51,7 +51,7 @@
 
 //::::::::::::::::::::Variables:::::::::::::::::::::::::::::::::::::::://
 
-int a, c, d, e, f;
+int a, c, d, e, f, stone;
 int x = 0;
 int y = 0;
 
@@ -476,6 +476,7 @@ void drawGamePage()
 	iSetColor(r, g, b);
 	iShowImage(0, 0, 1366, 728, a);
 	//iFilledRectangle(herox, heroy, 50, 150);
+	iShowImage(herox - 10, heroy - 30, 150, 50, stone);
 	if (hero_stand == 1)
 	{
 		iShowBMP2(herox, heroy, "image\\hero1.bmp", 0);
@@ -485,6 +486,7 @@ void drawGamePage()
 		iShowBMP2(herox, heroy, hero[hero_index], 0);
 		
 	}
+	iShowImage(vilx - 10, vily + 3, 250, 50, stone);
 	iShowBMP2(vilx, vily, v1[v1_index], 0);
 	
 	if (shooot == 1)
@@ -547,6 +549,7 @@ int main()
 	iInitialize(1366, 728, "Hawkeye Roulette");
 	a = iLoadImage("./image/bg_level1.jpg");
 	d = iLoadImage("./image/arrow.png");
+	stone = iLoadImage("./image/stone.png");
 	iSetTimer(100, vilmotion);
 	iSetTimer(200, hero_motion);
 	if (musicOn)
