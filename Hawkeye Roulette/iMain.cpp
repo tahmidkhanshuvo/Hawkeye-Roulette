@@ -40,7 +40,7 @@
 
 
 
-//:::::::::::::::::Header Files:::::::::::::::::::::::::::::::::::::::://
+//::::::::::::::::::::Header Files:::::::::::::::::::::::::::::::::::::::://
 
 #include <iostream>
 #include <cmath>
@@ -62,6 +62,9 @@ int b = 255;
 int dx = 10;
 int dy = 10;
 
+int ux = 0;
+int uy = 0;
+
 //:::::::::::::Music and Menu Variables:::::::::::://
 int musicOn;
 int menu;
@@ -79,8 +82,8 @@ int creditPage = 0;
 
 //Hero Character Variables
 
-int herox = 150;
-int heroy = 150;
+int herox = 200;
+int heroy = 200;
 int shootx = 30;
 int shooty = 75;
 
@@ -109,6 +112,10 @@ float voy = vily + vshooty;
 int shooot = 0;
 int vshooot = 0; //Shoot Flag
 
+//Arrow variables
+float arrowDirectionX = 0.0f;
+float arrowDirectionY = 0.0f;
+
 
 //::::::::::::::::::::::::::Action Functions:::::::::::::::::::::::::::::://
 
@@ -124,21 +131,27 @@ void resetVillain() {
 void shoot(){
 
 	if (shooot == 1) {
-		// Calculate the direction towards the villain
-		float directionX = vilx - ox;
-		float directionY = (vily + vilhity) - oy;
+
+	/*	 // Calculate the direction towards the villain
+		float arrowDirectionX = vilx - ox;
+		float arrowDirectionY = (vily + vilhity) - oy;
 
 		// Normalize the direction vector
-		float length = std::sqrt(directionX * directionX + directionY * directionY);
-		directionX /= length;
-		directionY /= length;
+		float length = std::sqrt(arrowDirectionX * arrowDirectionX + arrowDirectionY * arrowDirectionY);
+		arrowDirectionX /= length;
+		arrowDirectionY /= length; */
 
 		// Move the bullet along the normalized direction
-		ox += 1 * directionX;
-		oy += 1 * directionY;
+		ox -= 1 * arrowDirectionX;
+		oy -= 1 * arrowDirectionY;
 
 		// Check if the bullet has reached the villain's hitting zone
-		if ((ox >= vilx && oy >= vily + vilhity) || (ox >= vilx && oy <= vily + vilhity)) {
+		if (ox > 1366 || oy > 728 || ox < 0 || oy < 0){
+			ox = herox + shootx;
+			oy = heroy + shooty;
+			shooot = 0;
+		}
+		else if ((ox >= vilx && ox<=vilx+30) && (oy >= vily-10 && oy<= vily+160)) {
 			ox = herox + shootx;
 			oy = heroy + shooty;
 			villainlife -= 5;
@@ -149,29 +162,43 @@ void shoot(){
 			}  
 		}
 	}
-	iSetTimer(10, shoot);
+	//iSetTimer(10, shoot);
 }
 
 
 
-void vshoot(){
-	if (vshooot == 1){
-		vox -= 5;
-		if (voy != heroy + 75)
-		{
-			float abs = (vilx) / vox;
-			voy += ((vily + 75) - voy) / abs;
-		}
-		if (vox <= herox+30 && voy == heroy + 75)
-		{
-			vox = vilx - vshootx;
-			voy = vily + vshooty;
-			vshooot = 0;
-		}
 
-		//iSetTimer(50, vshoot);
-	}
-}
+void vshoot() {
+		if (vshooot == 1) {
+				// Calculate the direction towards the hero
+				float varrowDirectionX = (herox + shootx) - vox;
+				float varrowDirectionY = (heroy + shooty) - voy;
+
+				// Normalize the direction vector
+				float vlength = std::sqrt(varrowDirectionX * varrowDirectionX + varrowDirectionY * varrowDirectionY);
+				varrowDirectionX /= vlength;
+				varrowDirectionY /= vlength;
+
+				// Move the bullet along the normalized direction
+				vox += 1 * varrowDirectionX;
+				voy += 1 * varrowDirectionY;
+
+				// Check if the bullet is still within the screen bounds
+				if (vox < 0 || vox > 1366 || voy < 0 || voy > 728) {
+					vox = vilx - vilhitx;
+					voy = vily + vilhity;
+					vshooot = 0;
+				}
+
+				// Check if the bullet has hit the hero
+				if ((vox <= herox + 30 && vox >= herox) && (voy >= heroy + 10 && voy <= heroy + 160)) {
+					vox = vilx - vilhitx;
+					voy = vily + vilhity;
+					vshooot = 0;
+
+				}
+			}
+		}
 
 //::::::::::Function Skeletions:::::::::::::::://
 
@@ -185,6 +212,7 @@ void drawGamePage();
 void drawCreditPage();
 void drawMapPage();
 void drawScreen();
+void drawTraceline();
 void collision();
 
 void Run();
@@ -226,6 +254,7 @@ void iDraw()
 		drawCreditPage();
 	}
 
+	drawTraceline();
 }
 
 
@@ -244,7 +273,8 @@ void iMouseMove(int mx, int my)
 //***********ipassiveMouse*************//
 void iPassiveMouseMove(int mx, int my)
 {
-
+		ux = mx;
+		uy = my;
 }
 
 void iMouse(int button, int state, int mx, int my)
@@ -272,7 +302,7 @@ void iMouse(int button, int state, int mx, int my)
 				creditButtonClickHandler();
 			}
 
-			else if (homePage == 1 && (mx >= 77 && mx <= 124) && (my >= 661 && my <= 707))
+			else if (homePage == 1 && (mx >= 77 && mx <= 124) && (my >= 661 && my <= 707))  //edited
 			{
 				if (musicOn)
 				{
@@ -285,6 +315,20 @@ void iMouse(int button, int state, int mx, int my)
 					PlaySound("music\\bgmusic.wav", NULL, SND_LOOP | SND_ASYNC);
 				}
 			}
+
+			else if (homePage == 0 && gameOn == 1)    //arrow
+			{
+				// Calculate the direction towards the mouse position
+				arrowDirectionX = mx - ox;
+				arrowDirectionY = my - oy; 
+
+				// Normalize the direction vector
+				float length = std::sqrt(arrowDirectionX * arrowDirectionX + arrowDirectionY * arrowDirectionY);
+				arrowDirectionX /= length;
+				arrowDirectionY /= length; 
+				shooot = 1;
+				iSetTimer(10, shoot);
+			} 
 
 
 		}
@@ -350,6 +394,7 @@ void iKeyboard(unsigned char key)
 	else if (key == 'i')
 	{
 		vshooot = 1;
+		iSetTimer(10, vshoot);
 	}
 
 }
@@ -440,6 +485,8 @@ void backButtonClickHandler()
 }
 
 
+
+
 //:::::::::::::::Drawing Functions:::::::::::://
 
 void drawHomePage()
@@ -489,6 +536,11 @@ void drawCreditPage()
 	iShowBMP2(0, 0, "image\\credits.bmp", 0);
 }
 
+void drawTraceline(){
+	if (ux < 500 && uy < 500){
+		iLine(ux, uy, herox, heroy+shooty);
+	}
+}
 
 //::::::::::::iMain:::::::::::::::::://
 
