@@ -81,6 +81,7 @@ int menu;
 int rules;
 int credit;
 int gameOn = 0;
+int gameResume = 0;
 
 
 
@@ -91,6 +92,13 @@ int hscorePage = 0;
 int creditPage = 0;
 
 //Hero Character Variables
+
+struct Hero {
+	int x;
+	int y;
+	int life;
+};
+Hero hero;
 
 int herox = 200;
 int heroy = 200;
@@ -103,6 +111,15 @@ bool isJumping = false;  // Flag to indicate if the hero is jumping
 int herolife = 50;
 
 // Villain Character Variables
+struct Villain {
+	int x;
+	int y;
+	int life;
+	// Add any other relevant properties
+};
+
+const int maxvil = 10;
+Villain vil[maxvil];
 
 int vilx = 800;
 int vily = 150;
@@ -135,87 +152,98 @@ float arrowDirectionY = 0.0f;
 //::::::::::::::::::::::::::Action Functions:::::::::::::::::::::::::::::://
 
 // Function to reset the villain's position to a random location and reset it's life
+
 void resetVillain() {
 
-	// Set the villain's position to a random location within the specified range
-	vilx = rand() % (maxX - minX + 1) + minX;
-	vily = rand() % (maxY - minY + 1) + minY;
-	score += 10;
-	villainlife = 10;
+		// Set the villain's position to a random location within the specified range
+		vilx = rand() % (maxX - minX + 1) + minX;
+	    vily = rand() % (maxY - minY + 1) + minY;
+
+		score += 10;
+		villainlife = 10;
+
 }
 
 void shoot(){
 
 	if (shooot == 1) {
 
-	/*	 // Calculate the direction towards the villain
-		float arrowDirectionX = vilx - ox;
-		float arrowDirectionY = (vily + vilhity) - oy;
 
-		// Normalize the direction vector
-		float length = std::sqrt(arrowDirectionX * arrowDirectionX + arrowDirectionY * arrowDirectionY);
-		arrowDirectionX /= length;
-		arrowDirectionY /= length; */
+			/*	 // Calculate the direction towards the villain
+			float arrowDirectionX = vilx - ox;
+			float arrowDirectionY = (vily + vilhity) - oy;
+			3 days ago
 
-		// Move the bullet along the normalized direction
-		ox -= 1 * arrowDirectionX;
-		oy -= 1 * arrowDirectionY;
+			Arrow Fixed
 
-		// Check if the bullet has reached the villain's hitting zone
+			// Normalize the direction vector
+			yesterday
+
+			Shoot Improved
+			float length = std::sqrt(arrowDirectionX * arrowDirectionX + arrowDirectionY * arrowDirectionY);
+			arrowDirectionX /= length;
+			arrowDirectionY /= length; */
+
+			// Move the bullet along the normalized direction
+			ox -= 1 * arrowDirectionX;
+	     	oy -= 1 * arrowDirectionY;
+
+
+			// Check if the bullet has reached the villain's hitting zone
+
 		if (ox > 1366 || oy > 728 || ox < 0 || oy < 0){
 			ox = herox + shootx;
 			oy = heroy + shooty;
 			shooot = 0;
 		}
-		else if ((ox >= vilx && ox<=vilx+30) && (oy >= vily-10 && oy<= vily+160)) {
-			ox = herox + shootx;
-			oy = heroy + shooty;
-			villainlife -= 5;
-			shooot = 0;  // Reset shooot after shooting
+		else if ((ox >= vilx && ox <= vilx + 30) && (oy >= vily - 10 && oy <= vily + 160)) {
+				ox = herox + shootx;
+			    oy = heroy + shooty;
+				villainlife -= 5;
+				shooot = 0;  // Reset shooot after shooting
+
 
 			if (villainlife == 0){
 				resetVillain();     // Reset villain's position and life when killed
-			}  
+			}
+
 		}
 	}
-	//iSetTimer(10, shoot);
+		//iSetTimer(10, shoot);
+
 }
 
-
-
-
 void vshoot() {
-		if (vshooot == 1) {
-				// Calculate the direction towards the hero
-				float varrowDirectionX = (herox + shootx) - vox;
-				float varrowDirectionY = (heroy + shooty) - voy;
+	if (vshooot == 1) {
+		// Calculate the direction towards the hero
+		float varrowDirectionX = (herox + shootx) - vox;
+		float varrowDirectionY = (heroy + shooty) - voy;
 
-				// Normalize the direction vector
-				float vlength = std::sqrt(varrowDirectionX * varrowDirectionX + varrowDirectionY * varrowDirectionY);
-				varrowDirectionX /= vlength;
-				varrowDirectionY /= vlength;
+		// Normalize the direction vector
+		float vlength = std::sqrt(varrowDirectionX * varrowDirectionX + varrowDirectionY * varrowDirectionY);
+		varrowDirectionX /= vlength;
+		varrowDirectionY /= vlength;
 
-				// Move the bullet along the normalized direction
-				vox += 1 * varrowDirectionX;
-				voy += 1 * varrowDirectionY;
+		// Move the bullet along the normalized direction
+		vox += 1 * varrowDirectionX;
+		voy += 1 * varrowDirectionY;
 
-				// Check if the bullet is still within the screen bounds
-				if (vox < 0 || vox > 1366 || voy < 0 || voy > 728) {
-					vox = vilx - vilhitx;
-					voy = vily + vilhity;
-					vshooot = 0;
-				}
-
-				// Check if the bullet has hit the hero
-				if ((vox <= herox + 30 && vox >= herox) && (voy >= heroy + 10 && voy <= heroy + 160)) {
-					vox = vilx - vilhitx;
-					voy = vily + vilhity;
-					vshooot = 0;
-					herolife -= 5;
-
-				}
-			}
+		// Check if the bullet is still within the screen bounds
+		if (vox < 0 || vox > 1366 || voy < 0 || voy > 728) {
+			vox = vilx - vilhitx;
+			voy = vily + vilhity;
+			vshooot = 0;
 		}
+
+		// Check if the bullet has hit the hero
+		if ((vox <= herox + 30 && vox >= herox) && (voy >= heroy + 10 && voy <= heroy + 160)) {
+			vox = vilx - vilhitx;
+			voy = vily + vilhity;
+			vshooot = 0;
+			herolife -= 5;
+		}
+	}
+}
 
 //::::::::::Function Skeletions:::::::::::::::://
 
@@ -232,6 +260,8 @@ void drawScreen();
 void drawTraceline();
 void drawGameText();
 void drawgameOverPage();
+void drawResumePage();
+
 
 void updateHeroPosition();
 void collision();
@@ -251,7 +281,7 @@ void iDraw()
 {
 	iClear();
 	
-    if (homePage == 1)
+	if (homePage == 1)
 	{
 		drawHomePage();
 	}
@@ -275,7 +305,7 @@ void iDraw()
 			drawGameText();
 		}
 	}
-	else if (creditPage == 1)
+	else if (gameOn == 0 && creditPage == 1)
 	{
 		drawCreditPage();
 	}
@@ -283,6 +313,10 @@ void iDraw()
 	{
 		hs.addScore("Tahmid", score);
 		drawgameOverPage();
+	}
+	else if (gameOn == 0 && gameResume == 1)
+	{
+		drawResumePage();
 	}
 
 }
@@ -360,7 +394,6 @@ void iMouse(int button, int state, int mx, int my)
 				iSetTimer(10, shoot);
 			} 
 
-
 		}
 	}
 
@@ -415,6 +448,20 @@ void iKeyboard(unsigned char key)
 	{
 		vilx += 10;
 	}
+
+	else if (key == 'q')
+{
+       if (homePage==0 && gameOn == 1)    
+	{
+		gameResume = 1;
+		gameOn = 0;
+	}
+	   else if (homePage == 0 && gameOn == 0)
+	{
+		gameResume = 0;
+		gameOn = 1;
+	}
+}
 
 	else if (key == 'e')
 	{
@@ -539,18 +586,20 @@ void drawHomePage()
 
 void drawGamePage()
 {
-	iSetColor(r, g, b);
-	iFilledRectangle(herox, heroy, 30, 150);
-	iFilledRectangle(vilx, vily, 30, 150);
+	if (gameOn == 1){
+		iSetColor(r, g, b);
+		iFilledRectangle(herox, heroy, 30, 150);
+		iFilledRectangle(vilx, vily, 30, 150);
 
-	if (shooot == 1)
-	{
-		iFilledRectangle(ox, oy, 20, 20);
-	}
+		if (shooot == 1)
+		{
+			iFilledRectangle(ox, oy, 20, 20);
+		}
 
-	if (vshooot == 1)
-	{
-		iFilledRectangle(vox, voy, 20, 20);
+		if (vshooot == 1)
+		{
+			iFilledRectangle(vox, voy, 20, 20);
+		}
 	}
 }
 
@@ -590,7 +639,12 @@ void drawGameText(){
 
 void drawgameOverPage(){
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\credits.bmp", 255);
+	iShowBMP2(0, 0, "image\\gameover.bmp", 255);
+}
+
+void drawResumePage(){
+	iFilledRectangle(0, 0, 1366, 728);
+	iShowBMP2(0, 0, "image\\paused.bmp", 255);
 }
 
 void updateHeroPosition() {
