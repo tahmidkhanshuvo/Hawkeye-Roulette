@@ -27,7 +27,7 @@
 * ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 * ::░█▀█░█░█░▀█▀░█░█░█▀█░█▀▄░░░░░░░▀█▀░█▀█░█░█░█▄█░▀█▀░█▀▄░░░█░█░█░█░█▀█░█▀█░░░░        ::
 * ::░█▀█░█░█░░█░░█▀█░█░█░█▀▄░░▀░░░░░█░░█▀█░█▀█░█░█░░█░░█░█░░░█▀▄░█▀█░█▀█░█░█░░░░        ::
-* ::░▀░▀░▀▀▀░░▀░░▀░▀░▀▀▀░▀░▀░░▀░░░░░▀░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀░░░░▀░▀░▀░▀░▀░▀░▀░▀░▄▀░        ::
+* ::░▀░▀░▀▀▀░░▀░░▀░▀░▀▀▀░▀░▀░░▀░░░░░▀░░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀░░░░▀░▀░▀░▀░▀░▀░▀░▀░▄▀░        :: 
 * ::░▄▀▄░█░█░█▀█░▀▀█░▀█▀░░░▀▀█░█▀█░█▀▄░▀█▀░█▀█░░░█▀▀░█░█░█▀▄░█▀█░█░█░░░░                ::
 * ::░█\█░█░█░█▀█░▄▀░░░█░░░░▄▀░░█▀█░█▀▄░░█░░█░█░░░▀▀█░█░█░█▀▄░█▀█░█▀█░░░░                ::
 * ::░░▀\░▀▀▀░▀░▀░▀▀▀░▀▀▀░░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀░▀░░░▀▀▀░▀▀▀░▀▀░░▀░▀░▀░▀░▄▀░                ::
@@ -66,7 +66,10 @@ int dy = 10;
 int ux = 0;
 int uy = 0;
 
+int score = 0;
+
 char scoreText[20];
+char healthText[20];
 char vscoreText[20];
 
 //:::::::::::::Music and Menu Variables:::::::::::://
@@ -134,6 +137,7 @@ void resetVillain() {
 	// Set the villain's position to a random location within the specified range
 	vilx = rand() % (maxX - minX + 1) + minX;
 	vily = rand() % (maxY - minY + 1) + minY;
+	score += 10;
 	villainlife = 10;
 }
 
@@ -265,8 +269,12 @@ void iDraw()
 			drawGamePage();
 			updateHeroPosition();
 			drawTraceline();
-			sprintf_s(scoreText, sizeof(scoreText), "Hero Health %d", herolife);
-			iText(15, 700, scoreText, GLUT_BITMAP_HELVETICA_18);
+			sprintf_s(healthText, sizeof(healthText), "Hero Health %d", herolife);
+			iText(15, 700, healthText, GLUT_BITMAP_HELVETICA_18);
+
+			sprintf_s(scoreText, sizeof(scoreText), "Score: %d", score);
+			iText(200, 700, scoreText, GLUT_BITMAP_HELVETICA_18);
+
 			sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
 			iText(vilx, vily + 160, vscoreText, GLUT_BITMAP_HELVETICA_18);
 		}
