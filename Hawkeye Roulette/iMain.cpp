@@ -91,7 +91,7 @@ int herox = 150;
 int heroy = 150;
 int shootx = 30;
 int shooty = 75;
-char hero[11][25] = { "image\\hero1.bmp", "image\\hero2.bmp", "image\\hero3.bmp", "image\\hero4.bmp", "image\\hero5.bmp", "image\\hero6.bmp", "image\\hero7.bmp", "image\\hero8.bmp", "image\\hero9.bmp", "image\\hero10.bmp", "image\\hero11.bmp"};
+char hero[8][25] = { "image\\hero1.bmp", "image\\hero2.bmp", "image\\hero3.bmp", "image\\hero4.bmp", "image\\hero5.bmp", "image\\hero6.bmp", "image\\hero7.bmp", "image\\hero8.bmp"};
 int hero_index = 0;
 int hero_attack = 0;
 int hero_count = 0;
@@ -585,7 +585,7 @@ void drawGamePage()
 	iSetColor(r, g, b);
 	iShowImage(0, 0, 1366, 728, a);
 	//iFilledRectangle(herox, heroy, 50, 150);
-	iShowImage(herox - 10, heroy - 30, 150, 50, stone);
+	iShowImage(herox +10, heroy +10 , 150, 50, stone);
 	if (hero_stand == 1)
 	{
 		iShowBMP2(herox, heroy, "image\\hero1.bmp", 0);
@@ -601,13 +601,15 @@ void drawGamePage()
 	if (shooot == 1)
 	{
 		//iFilledRectangle(ox, oy, 100, 20);
-		iShowImage(ox, oy, 100, 30, d);
+		//iShowImage(ox, oy, 100, 30, d);
+		iShowBMP2(ox, oy + 10, "image\\bullet.bmp", 0);
 	}
 
 	if (vshooot == 1)
 	{
 		//iFilledRectangle(vox, voy, 20, 20);
 		iShowImage(vox, voy, 100, 30, f);
+		
 	}
 }
 
@@ -644,11 +646,11 @@ void updateHeroPosition() {
 }
 void hero_motion(){
 	hero_index++;
-	if (hero_index >= 11){
+	if (hero_index >= 8){
 		hero_index = 0;
 	}
 	hero_count++;
-	if (hero_count >= 11){
+	if (hero_count >= 8){
 		hero_count = 0;
 		hero_index = 0;
 		hero_stand = 1;
@@ -675,7 +677,7 @@ int main()
 
 	iInitialize(1366, 728, "Hawkeye Roulette");
 	e = iLoadImage("./image/loadingScreen.jpg");
-	a = iLoadImage("./image/bg_level1.jpg");
+	a = iLoadImage("./image/bg.png");
 	d = iLoadImage("./image/arrow.png");
 	f = iLoadImage("./image/arrow2.png");
 	stone = iLoadImage("./image/stone.png");
