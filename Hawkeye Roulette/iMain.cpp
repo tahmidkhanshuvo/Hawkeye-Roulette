@@ -76,7 +76,7 @@ int rules;
 int credit;
 int gameOn = 0;
 
-char load[4][25] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp" };
+char load[4][20] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp" };
 int loadIndex = 0;
 int loadingScreen = 1;
 int homePage = 1;
@@ -130,7 +130,7 @@ float oy = heroy + shooty;
 float vox = vilx - vshootx;
 float voy = vily + vshooty;
 int shooot = 0;
-int vshooot = 0; //Shoot Flag
+int vshooot = 1; //Shoot Flag
 
 //Arrow variables
 float arrowDirectionX = 0.0f;
@@ -199,21 +199,21 @@ void vshoot(){
 		varrowDirectionY /= vlength;
 
 		// Move the bullet along the normalized direction
-		vox += 1 * varrowDirectionX;
-		voy += 1 * varrowDirectionY;
+		vox += 5 * varrowDirectionX;
+		voy += 5 * varrowDirectionY;
 
 		// Check if the bullet is still within the screen bounds
 		if (vox < 0 || vox > 1366 || voy < 0 || voy > 728) {
 			vox = vilx - vilhitx;
 			voy = vily + vilhity;
-			vshooot = 0;
+			//vshooot = 0;
 		}
 
 		// Check if the bullet has hit the hero
 		if ((vox <= herox + 30 && vox >= herox) && (voy >= heroy + 10 && voy <= heroy + 160)) {
 			vox = vilx - vilhitx;
 			voy = vily + vilhity;
-			vshooot = 0;
+			//vshooot = 0;
 			herolife -= 5;
 
 		}
@@ -290,7 +290,7 @@ void iDraw()
 			sprintf_s(scoreText, sizeof(scoreText), "  %d", herolife);
 			iText(154, 694, scoreText, GLUT_BITMAP_HELVETICA_18);
 			iText(10, 692, "Hero Health", GLUT_BITMAP_HELVETICA_18);
-			iShowBMP2(vilx + 55, vily - 65, "image\\villainHealth.bmp", 0);
+			iShowBMP2(vilx + 56, vily - 65, "image\\villainHealth.bmp", 0);
 			sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
 			iText(vilx + 85 , vily - 35, vscoreText, GLUT_BITMAP_HELVETICA_18);
 		}
@@ -373,7 +373,7 @@ void iMouse(int button, int state, int mx, int my)
 				shooot = 1;
 				hero_attack = 1;
 				hero_stand = 0;
-				iSetTimer(10, shoot);
+				
 			}
 
 
@@ -435,13 +435,13 @@ void iKeyboard(unsigned char key)
 	else if (key == 'e')
 	{
 		
-		shooot = 1;
-		iSetTimer(10, shoot);
+		//shooot = 1;
+		//iSetTimer(10, shoot);
 	}
 	else if (key == 'i')
 	{
 		vshooot = 1;
-		iSetTimer(10, vshoot);
+		
 	}
 
 
@@ -673,8 +673,10 @@ int main()
 	f = iLoadImage("./image/arrow2.png");
 	stone = iLoadImage("./image/stone.png");
 	gameOver = iLoadImage("./image/gameOver.jpg");
-	iSetTimer(100, vilmotion);
+	iSetTimer(200, vilmotion);
 	iSetTimer(200, hero_motion);
+	iSetTimer(10, shoot);
+	iSetTimer(1, vshoot);
 	if (musicOn)
 	{
 		PlaySound("music\\bgmusic.wav", NULL, SND_LOOP | SND_ASYNC);
