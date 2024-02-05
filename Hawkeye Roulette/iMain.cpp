@@ -79,7 +79,7 @@ int gameOn = 0;
 char load[4][25] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp" };
 int loadIndex = 0;
 int loadingScreen = 1;
-int homePage = 1;
+int homePage = 0;
 int mission1Page = 0;
 int instructPage = 0;
 int hscorePage = 0;
@@ -256,13 +256,13 @@ void hero_motion();
 void iDraw()
 {
 	iClear();
-	/*if (loadingScreen == 1)
+	if (loadingScreen == 1)
 	{
 		iShowImage(0, 0, 1366, 728, e);
 		iShowBMP2(400, 200, load[loadIndex], 0);
 		loadScreen();
-	}*/
-	 if (homePage == 1)
+	}
+	else if (homePage == 1)
 	{
 		drawHomePage();
 	}
