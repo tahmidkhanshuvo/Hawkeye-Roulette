@@ -76,7 +76,7 @@ int rules;
 int credit;
 int gameOn = 0;
 
-char load[4][20] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp" };
+char load[6][20] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp", "image\\loading5.bmp", "image\\loading6.bmp"};
 int loadIndex = 0;
 int loadingScreen = 1;
 int homePage = 1;
@@ -259,7 +259,7 @@ void iDraw()
 	/*if (loadingScreen == 1)
 	{
 		iShowImage(0, 0, 1366, 728, e);
-		iShowBMP2(400, 200, load[loadIndex], 0);
+		iShowBMP2(400, 300, load[loadIndex], 0);
 		loadScreen();
 	}
 	else*/ if (homePage == 1)
@@ -332,25 +332,31 @@ void iMouse(int button, int state, int mx, int my)
 
 			if (homePage == 1 && (mx >= 791 && mx <= 1059) && (my >= 445 && my <= 491))   //start
 			{
+				PlaySound("music\\mouseClick.wav", NULL, SND_ASYNC);
 				startButtonClickHandler();
 			}
 			else if (homePage == 1 && (mx >= 914 && mx <= 1117) && (my >= 593 && my <= 641))    //edited
 			{
+				PlaySound("music\\mouseClick.wav", NULL, SND_ASYNC);
 				instructButtonClickHandler();
 			}
 			else if (homePage == 1 && (mx >= 966 && mx <= 1166) && (my >= 184 && my <= 235))   //edited
 			{
+				PlaySound("music\\mouseClick.wav", NULL, SND_ASYNC);
 				hscoreButtonClickHandler();
 			}
 			else if (homePage == 1 && (mx >= 665 && mx <= 872) && (my >= 185 && my <= 234))   //edited
 			{
+				PlaySound("music\\mouseClick.wav", NULL, SND_ASYNC);
 				creditButtonClickHandler();
+				
 			}
 
 			else if (homePage == 1 && (mx >= 77 && mx <= 124) && (my >= 661 && my <= 707))
 			{
 				if (musicOn)
 				{
+
 					musicOn = false;
 					PlaySound(0, 0, 0);
 				}
@@ -362,6 +368,7 @@ void iMouse(int button, int state, int mx, int my)
 			}
 			else if (homePage == 0 && gameOn == 1)    //arrow
 			{
+				PlaySound("music\\arrowSound.wav", NULL, SND_ASYNC);
 				// Calculate the direction towards the mouse position
 				arrowDirectionX = mx - ox;
 				arrowDirectionY = my - oy;
@@ -543,17 +550,17 @@ void loadScreen()
 
 	if (loadingScreen)
 	{
-		if (loadIndex < 4)
+		if (loadIndex < 6)
 		{
 			loadIndex++;
-			if (loadIndex == 3)
+			if (loadIndex == 5)
 			{
 				homePage = 1;
 			}
 		}
-		else if (loadIndex == 4)
+		else if (loadIndex == 6)
 		{
-			loadIndex = 3;
+			loadIndex = 5;
 		}
 
 	}
@@ -563,12 +570,12 @@ void drawHomePage()
 	if (musicOn){
 		iSetColor(128, 128, 128);
 		iFilledRectangle(0, 0, 1366, 728);
-		iShowBMP2(0, 0, "image\\homemusic.bmp", 0);
+		iShowBMP2(0, 0, "image\\homemusic.bmp", 255);
 	}
 	else if (!musicOn){
 		iSetColor(128, 128, 128);
 		iFilledRectangle(0, 0, 1366, 728);
-		iShowBMP2(0, 0, "image\\homemute.bmp", 0);
+		iShowBMP2(0, 0, "image\\homemute.bmp", 255);
 	}
 
 }
@@ -606,17 +613,17 @@ void drawGamePage()
 
 void drawHscorePage(){
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\highscore.bmp", 0);
+	iShowBMP2(0, 0, "image\\highscore.bmp", 255);
 }
 void drawInstructPage(){
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\instruction.bmp", 0);
+	iShowBMP2(0, 0, "image\\instruction.bmp", 255);
 }
 
 void drawCreditPage()
 {
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\credits.bmp", 0);
+	iShowBMP2(0, 0, "image\\credits.bmp", 255);
 }
 void drawTraceline(){
 	if (ux < 500 && uy < 500){
@@ -681,6 +688,9 @@ int main()
 	{
 		PlaySound("music\\bgmusic.wav", NULL, SND_LOOP | SND_ASYNC);
 	}
+	
+	
+	
 
 	iStart();
 
