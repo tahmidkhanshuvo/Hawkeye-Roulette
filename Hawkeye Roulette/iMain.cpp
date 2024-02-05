@@ -79,7 +79,7 @@ int gameOn = 0;
 char load[4][25] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp" };
 int loadIndex = 0;
 int loadingScreen = 1;
-int homePage = 0;
+int homePage = 1;
 int mission1Page = 0;
 int instructPage = 0;
 int hscorePage = 0;
@@ -256,13 +256,13 @@ void hero_motion();
 void iDraw()
 {
 	iClear();
-	if (loadingScreen == 1)
+	/*if (loadingScreen == 1)
 	{
 		iShowImage(0, 0, 1366, 728, e);
 		iShowBMP2(400, 200, load[loadIndex], 0);
 		loadScreen();
 	}
-	else if (homePage == 1)
+	else*/ if (homePage == 1)
 	{
 		drawHomePage();
 	}
@@ -286,8 +286,11 @@ void iDraw()
 			drawGamePage();
 			updateHeroPosition();
 			drawTraceline();
-			sprintf_s(scoreText, sizeof(scoreText), "Hero Health %d", herolife);
-			iText(15, 700, scoreText, GLUT_BITMAP_HELVETICA_18);
+			iShowBMP2(94, 648, "image\\healthPoint.bmp", 0);
+			sprintf_s(scoreText, sizeof(scoreText), "  %d", herolife);
+			iText(154, 694, scoreText, GLUT_BITMAP_HELVETICA_18);
+			iText(10, 692, "Hero Health", GLUT_BITMAP_HELVETICA_18);
+			iShowBMP2(vilx + 55, vily - 65, "image\\villainHealth.bmp", 0);
 			sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
 			iText(vilx + 85 , vily - 35, vscoreText, GLUT_BITMAP_HELVETICA_18);
 		}
