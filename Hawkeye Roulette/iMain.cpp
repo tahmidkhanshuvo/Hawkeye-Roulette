@@ -49,6 +49,7 @@
 #include <cstdlib>
 #include "header\iGraphics.h"
 #include "header\collision.h"
+#include "header\highscores.h"
 
 //::::::::::::::::::::Variables:::::::::::::::::::::::::::::::::::::::://
 
@@ -71,6 +72,8 @@ int score = 0;
 char scoreText[20];
 char healthText[20];
 char vscoreText[20];
+
+HighScores hs;
 
 //:::::::::::::Music and Menu Variables:::::::::::://
 int musicOn;
@@ -227,6 +230,8 @@ void drawCreditPage();
 void drawMapPage();
 void drawScreen();
 void drawTraceline();
+void drawGameText();
+void drawgameOverPage();
 
 void updateHeroPosition();
 void collision();
@@ -262,26 +267,22 @@ void iDraw()
 	{
 		if (herolife <= 0){
 			gameOn = 0;
-			homePage = 1;
-			iText(400, 400, "Game Over", GLUT_BITMAP_HELVETICA_18);
 		}
 		else{
 			drawGamePage();
 			updateHeroPosition();
 			drawTraceline();
-			sprintf_s(healthText, sizeof(healthText), "Hero Health %d", herolife);
-			iText(15, 700, healthText, GLUT_BITMAP_HELVETICA_18);
-
-			sprintf_s(scoreText, sizeof(scoreText), "Score: %d", score);
-			iText(200, 700, scoreText, GLUT_BITMAP_HELVETICA_18);
-
-			sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
-			iText(vilx, vily + 160, vscoreText, GLUT_BITMAP_HELVETICA_18);
+			drawGameText();
 		}
 	}
 	else if (creditPage == 1)
 	{
 		drawCreditPage();
+	}
+	else if (herolife <= 0 && gameOn==0)
+	{
+		hs.addScore("Tahmid", score);
+		drawgameOverPage();
 	}
 
 }
@@ -526,12 +527,12 @@ void drawHomePage()
 	if (musicOn){
 		iSetColor(128, 128, 128);
 		iFilledRectangle(0, 0, 1366, 728);
-		iShowBMP2(0, 0, "image\\homemusic.bmp", 0);
+		iShowBMP2(0, 0, "image\\homemusic.bmp", 255);
 	}
 	else if (!musicOn){
 		iSetColor(128, 128, 128);
 		iFilledRectangle(0, 0, 1366, 728);
-		iShowBMP2(0, 0, "image\\homemute.bmp", 0);
+		iShowBMP2(0, 0, "image\\homemute.bmp", 255);
 	}
 
 }
@@ -555,23 +556,41 @@ void drawGamePage()
 
 void drawHscorePage(){
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\highscore.bmp", 0);
+	iShowBMP2(0, 0, "image\\highscore.bmp", 255);
+	hs.displayScores();
 }
 void drawInstructPage(){
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\instruction.bmp", 0);
+	iShowBMP2(0, 0, "image\\instruction.bmp", 155);
 }
 
 void drawCreditPage()
 {
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\credits.bmp", 0);
+	iShowBMP2(0, 0, "image\\credits.bmp", 255);
 }
 
 void drawTraceline(){
 	if (ux < 500 && uy < 500){
 		iLine(ux, uy, herox, heroy+shooty);
 	}
+}
+
+void drawGameText(){
+
+	sprintf_s(healthText, sizeof(healthText), "Hero Health %d", herolife);
+	iText(15, 700, healthText, GLUT_BITMAP_HELVETICA_18);
+
+	sprintf_s(scoreText, sizeof(scoreText), "Score: %d", score);
+	iText(200, 700, scoreText, GLUT_BITMAP_HELVETICA_18);
+
+	sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
+	iText(vilx, vily + 160, vscoreText, GLUT_BITMAP_HELVETICA_18);
+}
+
+void drawgameOverPage(){
+	iFilledRectangle(0, 0, 1366, 728);
+	iShowBMP2(0, 0, "image\\credits.bmp", 255);
 }
 
 void updateHeroPosition() {
