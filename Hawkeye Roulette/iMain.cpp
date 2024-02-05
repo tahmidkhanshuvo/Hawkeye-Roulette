@@ -51,7 +51,7 @@
 
 //::::::::::::::::::::Variables:::::::::::::::::::::::::::::::::::::::://
 
-int a, c, d, e, f, stone;
+int a, c, d, e, f, stone,gameOver;
 int x = 0;
 int y = 0;
 
@@ -62,6 +62,13 @@ int b = 255;
 int dx = 10;
 int dy = 10;
 
+int ux = 0;
+int uy = 0;
+
+char scoreText[20];
+char vscoreText[20];
+
+
 //:::::::::::::Music and Menu Variables:::::::::::://
 int musicOn;
 int menu;
@@ -69,8 +76,9 @@ int rules;
 int credit;
 int gameOn = 0;
 
-
-
+char load[4][25] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp" };
+int loadIndex = 0;
+int loadingScreen = 1;
 int homePage = 1;
 int mission1Page = 0;
 int instructPage = 0;
@@ -88,6 +96,12 @@ int hero_index = 0;
 int hero_attack = 0;
 int hero_count = 0;
 int hero_stand = 1;
+
+int jumpHeight = 50;     // Adjust as needed
+float jumpVelocity = 0;  // Initial jump velocity
+bool isJumping = false;  // Flag to indicate if the hero is jumping
+int herolife = 50;
+
 // Villain Character Variables
 
 int vilx = 800;
@@ -118,6 +132,10 @@ float voy = vily + vshooty;
 int shooot = 0;
 int vshooot = 0; //Shoot Flag
 
+//Arrow variables
+float arrowDirectionX = 0.0f;
+float arrowDirectionY = 0.0f;
+
 
 //::::::::::::::::::::::::::Action Functions:::::::::::::::::::::::::::::://
 
@@ -133,21 +151,27 @@ void resetVillain() {
 void shoot(){
 
 	if (shooot == 1) {
-		// Calculate the direction towards the villain
-		float directionX = vilx - ox;
-		float directionY = (vily + vilhity) - oy;
+
+		/*	 // Calculate the direction towards the villain
+		float arrowDirectionX = vilx - ox;
+		float arrowDirectionY = (vily + vilhity) - oy;
 
 		// Normalize the direction vector
-		float length = std::sqrt(directionX * directionX + directionY * directionY);
-		directionX /= length;
-		directionY /= length;
+		float length = std::sqrt(arrowDirectionX * arrowDirectionX + arrowDirectionY * arrowDirectionY);
+		arrowDirectionX /= length;
+		arrowDirectionY /= length; */
 
 		// Move the bullet along the normalized direction
-		ox += 1 * directionX;
-		oy += 1 * directionY;
+		ox -= 1 * arrowDirectionX;
+		oy -= 1 * arrowDirectionY;
 
 		// Check if the bullet has reached the villain's hitting zone
-		if ((ox >= vilx && oy >= vily + vilhity) || (ox >= vilx && oy <= vily + vilhity)) {
+		if (ox > 1366 || oy > 728 || ox < 0 || oy < 0){
+			ox = herox + shootx;
+			oy = heroy + shooty;
+			shooot = 0;
+		}
+		else if ((ox >= vilx && ox <= vilx + 30) && (oy >= vily - 10 && oy <= vily + 160)) {
 			ox = herox + shootx;
 			oy = heroy + shooty;
 			villainlife -= 5;
@@ -164,21 +188,35 @@ void shoot(){
 
 
 void vshoot(){
-	if (vshooot == 1){
-		vox -= 5;
-		if (voy != heroy + 75)
-		{
-			float abs = (vilx) / vox;
-			voy += ((vily + 75) - voy) / abs;
-		}
-		if (vox <= herox + 30 && voy == heroy + 75)
-		{
-			vox = vilx - vshootx;
-			voy = vily + vshooty;
+	if (vshooot == 1) {
+		// Calculate the direction towards the hero
+		float varrowDirectionX = (herox + shootx) - vox;
+		float varrowDirectionY = (heroy + shooty) - voy;
+
+		// Normalize the direction vector
+		float vlength = std::sqrt(varrowDirectionX * varrowDirectionX + varrowDirectionY * varrowDirectionY);
+		varrowDirectionX /= vlength;
+		varrowDirectionY /= vlength;
+
+		// Move the bullet along the normalized direction
+		vox += 1 * varrowDirectionX;
+		voy += 1 * varrowDirectionY;
+
+		// Check if the bullet is still within the screen bounds
+		if (vox < 0 || vox > 1366 || voy < 0 || voy > 728) {
+			vox = vilx - vilhitx;
+			voy = vily + vilhity;
 			vshooot = 0;
 		}
 
-		//iSetTimer(50, vshoot);
+		// Check if the bullet has hit the hero
+		if ((vox <= herox + 30 && vox >= herox) && (voy >= heroy + 10 && voy <= heroy + 160)) {
+			vox = vilx - vilhitx;
+			voy = vily + vilhity;
+			vshooot = 0;
+			herolife -= 5;
+
+		}
 	}
 }
 
@@ -188,6 +226,7 @@ void vshoot(){
 void funcGameOver();
 void funcMissionOver();
 
+void loadScreen();
 void drawHomePage();
 void drawHscorePage();
 void drawInstructPage();
@@ -196,8 +235,9 @@ void drawCreditPage();
 void drawMapPage();
 void drawScreen();
 void collision();
-
+void updateHeroPosition();
 void Run();
+void drawTraceline();
 
 void startButtonClickHandler();
 void creditButtonClickHandler();
@@ -216,8 +256,13 @@ void hero_motion();
 void iDraw()
 {
 	iClear();
-
-	if (homePage == 1)
+	/*if (loadingScreen == 1)
+	{
+		iShowImage(0, 0, 1366, 728, e);
+		iShowBMP2(400, 200, load[loadIndex], 0);
+		loadScreen();
+	}*/
+	 if (homePage == 1)
 	{
 		drawHomePage();
 	}
@@ -231,7 +276,21 @@ void iDraw()
 	}
 	else if (gameOn == 1)
 	{
-		drawGamePage();
+		if (herolife == 0){
+			//gameOn = 0;
+			//iShowImage(0, 0, 1366, 728, e);
+			//iText(400, 400, "Game Over", GLUT_BITMAP_HELVETICA_18);
+			iShowImage(0, 0, 1366, 728, gameOver);
+		}
+		else{
+			drawGamePage();
+			updateHeroPosition();
+			drawTraceline();
+			sprintf_s(scoreText, sizeof(scoreText), "Hero Health %d", herolife);
+			iText(15, 700, scoreText, GLUT_BITMAP_HELVETICA_18);
+			sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
+			iText(vilx + 85 , vily - 35, vscoreText, GLUT_BITMAP_HELVETICA_18);
+		}
 	}
 	else if (creditPage == 1)
 	{
@@ -256,7 +315,8 @@ void iMouseMove(int mx, int my)
 //***********ipassiveMouse*************//
 void iPassiveMouseMove(int mx, int my)
 {
-
+	ux = mx;
+	uy = my;
 }
 
 void iMouse(int button, int state, int mx, int my)
@@ -296,6 +356,21 @@ void iMouse(int button, int state, int mx, int my)
 					musicOn = true;
 					PlaySound("music\\bgmusic.wav", NULL, SND_LOOP | SND_ASYNC);
 				}
+			}
+			else if (homePage == 0 && gameOn == 1)    //arrow
+			{
+				// Calculate the direction towards the mouse position
+				arrowDirectionX = mx - ox;
+				arrowDirectionY = my - oy;
+
+				// Normalize the direction vector
+				float length = std::sqrt(arrowDirectionX * arrowDirectionX + arrowDirectionY * arrowDirectionY);
+				arrowDirectionX /= length;
+				arrowDirectionY /= length;
+				shooot = 1;
+				hero_attack = 1;
+				hero_stand = 0;
+				iSetTimer(10, shoot);
 			}
 
 
@@ -356,15 +431,16 @@ void iKeyboard(unsigned char key)
 
 	else if (key == 'e')
 	{
-		hero_attack = 1;
-		hero_stand = 0;
+		
 		shooot = 1;
 		iSetTimer(10, shoot);
 	}
 	else if (key == 'i')
 	{
 		vshooot = 1;
+		iSetTimer(10, vshoot);
 	}
+
 
 }
 
@@ -404,7 +480,10 @@ void iSpecialKeyboard(unsigned char key)
 	}
 	else if (key == GLUT_KEY_F2)
 	{
-
+		if (!isJumping) {
+			isJumping = true;
+			jumpVelocity = 13.0f;  // Adjust as needed
+		}
 	}
 
 }
@@ -455,7 +534,27 @@ void backButtonClickHandler()
 
 
 //:::::::::::::::Drawing Functions:::::::::::://
+void loadScreen()
+{
+	
 
+	if (loadingScreen)
+	{
+		if (loadIndex < 4)
+		{
+			loadIndex++;
+			if (loadIndex == 3)
+			{
+				homePage = 1;
+			}
+		}
+		else if (loadIndex == 4)
+		{
+			loadIndex = 3;
+		}
+
+	}
+}
 void drawHomePage()
 {
 	if (musicOn){
@@ -492,12 +591,13 @@ void drawGamePage()
 	if (shooot == 1)
 	{
 		//iFilledRectangle(ox, oy, 100, 20);
-		iShowImage(ox, oy, 100, 25, d);
+		iShowImage(ox, oy, 100, 30, d);
 	}
 
 	if (vshooot == 1)
 	{
-		iFilledRectangle(vox, voy, 20, 20);
+		//iFilledRectangle(vox, voy, 20, 20);
+		iShowImage(vox, voy, 100, 30, f);
 	}
 }
 
@@ -514,6 +614,23 @@ void drawCreditPage()
 {
 	iFilledRectangle(0, 0, 1366, 728);
 	iShowBMP2(0, 0, "image\\credits.bmp", 0);
+}
+void drawTraceline(){
+	if (ux < 500 && uy < 500){
+		iLine(ux, uy, herox, heroy + shooty);
+	}
+}
+void updateHeroPosition() {
+	if (isJumping) {
+		heroy += jumpVelocity;
+		jumpVelocity -= 0.5f;  // Gravity effect, adjust as needed
+
+		// Check if the jump is complete (hero is back on the ground)
+		if (heroy <= 150) {
+			heroy = 150;
+			isJumping = false;
+		}
+	}
 }
 void hero_motion(){
 	hero_index++;
@@ -547,9 +664,12 @@ int main()
 {
 
 	iInitialize(1366, 728, "Hawkeye Roulette");
+	e = iLoadImage("./image/loadingScreen.jpg");
 	a = iLoadImage("./image/bg_level1.jpg");
 	d = iLoadImage("./image/arrow.png");
+	f = iLoadImage("./image/arrow2.png");
 	stone = iLoadImage("./image/stone.png");
+	gameOver = iLoadImage("./image/gameOver.jpg");
 	iSetTimer(100, vilmotion);
 	iSetTimer(200, hero_motion);
 	if (musicOn)
