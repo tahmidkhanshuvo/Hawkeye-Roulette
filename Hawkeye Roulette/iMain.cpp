@@ -41,17 +41,19 @@
 
 
 //:::::::::::::::::Header Files:::::::::::::::::::::::::::::::::::::::://
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <cmath>
 #include <chrono>
 #include <cstdlib>
 #include "header\iGraphics.h"
 #include "header\collision.h"
+#include "header\highscores.h"
+
 
 //::::::::::::::::::::Variables:::::::::::::::::::::::::::::::::::::::://
 
-int a, c, d, e, f, stone,gameOver;
+int a, c, d, e, f, stone, gameOver;
 int x = 0;
 int y = 0;
 
@@ -65,8 +67,13 @@ int dy = 10;
 int ux = 0;
 int uy = 0;
 
+int score = 0;
+
 char scoreText[20];
+char healthText[20];
 char vscoreText[20];
+
+HighScores hs;
 
 
 //:::::::::::::Music and Menu Variables:::::::::::://
@@ -75,8 +82,9 @@ int menu;
 int rules;
 int credit;
 int gameOn = 0;
+int gameResume = 0;
 
-char load[6][20] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp", "image\\loading5.bmp", "image\\loading6.bmp"};
+char load[6][20] = { "image\\loading1.bmp", "image\\loading2.bmp", "image\\loading3.bmp", "image\\loading4.bmp", "image\\loading5.bmp", "image\\loading6.bmp" };
 int loadIndex = 0;
 int loadingScreen = 1;
 int homePage = 1;
@@ -87,11 +95,13 @@ int creditPage = 0;
 
 //Hero Character Variables
 
+
+
 int herox = 150;
 int heroy = 150;
 int shootx = 30;
 int shooty = 75;
-char hero[8][25] = { "image\\hero1.bmp", "image\\hero2.bmp", "image\\hero3.bmp", "image\\hero4.bmp", "image\\hero5.bmp", "image\\hero6.bmp", "image\\hero7.bmp", "image\\hero8.bmp"};
+char hero[8][25] = { "image\\hero1.bmp", "image\\hero2.bmp", "image\\hero3.bmp", "image\\hero4.bmp", "image\\hero5.bmp", "image\\hero6.bmp", "image\\hero7.bmp", "image\\hero8.bmp" };
 int hero_index = 0;
 int hero_attack = 0;
 int hero_count = 0;
@@ -103,6 +113,16 @@ bool isJumping = false;  // Flag to indicate if the hero is jumping
 int herolife = 50;
 
 // Villain Character Variables
+
+struct Villain {
+	int x;
+	int y;
+	int life;
+
+};
+
+const int maxvil = 10;
+Villain vil[maxvil];
 
 int vilx = 800;
 int vily = 150;
@@ -152,9 +172,9 @@ void shoot(){
 
 	if (shooot == 1) {
 
-        // Move the bullet along the normalized direction
-		ox -= 1 * arrowDirectionX;
-		oy -= 1 * arrowDirectionY;
+		// Move the bullet along the normalized direction
+		ox -= 5* arrowDirectionX;
+		oy -= 5* arrowDirectionY;
 
 		// Check if the bullet has reached the villain's hitting zone
 		if (ox > 1366 || oy > 728 || ox < 0 || oy < 0){
@@ -173,18 +193,18 @@ void shoot(){
 			}
 		}
 	}
-	iSetTimer(10, shoot);
+
 }
 
 
 
 void vshoot(){
 	if (vshooot == 1) {
-	
+
 		float varrowDirectionX = (herox + shootx) - vox;
 		float varrowDirectionY = (heroy + shooty) - voy;
 
-		
+
 		float vlength = std::sqrt(varrowDirectionX * varrowDirectionX + varrowDirectionY * varrowDirectionY);
 		varrowDirectionX /= vlength;
 		varrowDirectionY /= vlength;
@@ -221,20 +241,20 @@ void drawHscorePage();
 void drawInstructPage();
 void drawGamePage();
 void drawCreditPage();
-void drawMapPage();
 void drawScreen();
 void collision();
 void updateHeroPosition();
 void Run();
 void drawTraceline();
+void drawGameText();
+void drawgameOverPage();
+void drawResumePage();
 
 void startButtonClickHandler();
 void creditButtonClickHandler();
-void mapButtonClickHandler();
 void instructButtonClickHandler();
 void hscoreButtonClickHandler();
 
-void mission1ButtonClickHandler();
 
 void backButtonClickHandler();
 
@@ -247,9 +267,9 @@ void iDraw()
 	iClear();
 	/*if (loadingScreen == 1)
 	{
-		iShowImage(0, 0, 1366, 728, e);
-		iShowBMP2(400, 300, load[loadIndex], 0);
-		loadScreen();
+	iShowImage(0, 0, 1366, 728, e);
+	iShowBMP2(400, 300, load[loadIndex], 0);
+	loadScreen();
 	}
 	else*/ if (homePage == 1)
 	{
@@ -266,27 +286,28 @@ void iDraw()
 	else if (gameOn == 1)
 	{
 		if (herolife == 0){
-			//gameOn = 0;
-			//iShowImage(0, 0, 1366, 728, e);
-			//iText(400, 400, "Game Over", GLUT_BITMAP_HELVETICA_18);
-			iShowImage(0, 0, 1366, 728, gameOver);
+			gameOn = 0;
+
 		}
 		else{
 			drawGamePage();
 			updateHeroPosition();
 			drawTraceline();
-			iShowBMP2(94, 648, "image\\healthPoint.bmp", 0);
-			sprintf_s(scoreText, sizeof(scoreText), "  %d", herolife);
-			iText(154, 694, scoreText, GLUT_BITMAP_HELVETICA_18);
-			iText(10, 692, "Hero Health", GLUT_BITMAP_HELVETICA_18);
-			iShowBMP2(vilx + 56, vily - 65, "image\\villainHealth.bmp", 0);
-			sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
-			iText(vilx + 85 , vily - 35, vscoreText, GLUT_BITMAP_HELVETICA_18);
+			drawGameText();
 		}
 	}
-	else if (creditPage == 1)
+	else if (gameOn == 0 && creditPage == 1)
 	{
 		drawCreditPage();
+	}
+	else if (herolife <= 0 && gameOn == 0)
+	{
+		hs.addScore("Tahmid", score);
+		drawgameOverPage();
+	}
+	else if (gameOn == 0 && gameResume == 1)
+	{
+		drawResumePage();
 	}
 
 }
@@ -338,7 +359,7 @@ void iMouse(int button, int state, int mx, int my)
 			{
 				PlaySound("music\\mouseClick.wav", NULL, SND_ASYNC);
 				creditButtonClickHandler();
-				
+
 			}
 
 			else if (homePage == 1 && (mx >= 77 && mx <= 124) && (my >= 661 && my <= 707))
@@ -369,7 +390,7 @@ void iMouse(int button, int state, int mx, int my)
 				shooot = 1;
 				hero_attack = 1;
 				hero_stand = 0;
-				
+
 			}
 
 
@@ -427,17 +448,29 @@ void iKeyboard(unsigned char key)
 	{
 		vilx += 10;
 	}
-
+	else if (key == 'q')
+	{
+		if (homePage == 0 && gameOn == 1)
+		{
+			gameResume = 1;
+			gameOn = 0;
+		}
+		else if (homePage == 0 && gameOn == 0)
+		{
+			gameResume = 0;
+			gameOn = 1;
+		}
+	}
 	else if (key == 'e')
 	{
-		
+
 		//shooot = 1;
 		//iSetTimer(10, shoot);
 	}
 	else if (key == 'i')
 	{
 		vshooot = 1;
-		
+
 	}
 
 
@@ -531,11 +564,10 @@ void backButtonClickHandler()
 	gameOn = 0;
 }
 
-
 //:::::::::::::::Drawing Functions:::::::::::://
 void loadScreen()
 {
-	
+
 
 	if (loadingScreen)
 	{
@@ -574,7 +606,7 @@ void drawGamePage()
 	iSetColor(r, g, b);
 	iShowImage(0, 0, 1366, 728, a);
 	//iFilledRectangle(herox, heroy, 50, 150);
-	iShowImage(herox +10, heroy +10 , 150, 50, stone);
+	iShowImage(herox + 10, heroy + 10, 150, 50, stone);
 	if (hero_stand == 1)
 	{
 		iShowBMP2(herox, heroy, "image\\hero1.bmp", 0);
@@ -582,11 +614,11 @@ void drawGamePage()
 	else if (hero_stand == 0 && hero_attack == 1)
 	{
 		iShowBMP2(herox, heroy, hero[hero_index], 0);
-		
+
 	}
 	iShowImage(vilx - 10, vily + 3, 250, 50, stone);
 	iShowBMP2(vilx, vily, v1[v1_index], 0);
-	
+
 	if (shooot == 1)
 	{
 		//iFilledRectangle(ox, oy, 100, 20);
@@ -598,7 +630,7 @@ void drawGamePage()
 	{
 		//iFilledRectangle(vox, voy, 20, 20);
 		iShowImage(vox, voy, 100, 30, f);
-		
+
 	}
 }
 
@@ -618,13 +650,36 @@ void drawCreditPage()
 }
 void drawTraceline(){
 	if (ux < 500 && uy < 500){
-		iLine(ux, uy, herox, heroy + shooty);
+		iLine(ux , uy, herox , heroy + shooty);
 	}
+}
+void drawGameText(){
+
+	iShowBMP2(94, 648, "image\\healthPoint.bmp", 0);
+	sprintf_s(scoreText, sizeof(scoreText), "  %d", herolife);
+	iText(154, 694, scoreText, GLUT_BITMAP_HELVETICA_18);
+	iText(10, 692, "Hero Health", GLUT_BITMAP_HELVETICA_18);
+
+	sprintf_s(scoreText, sizeof(scoreText), "Score: %d", score);
+	iText(300, 692, scoreText, GLUT_BITMAP_HELVETICA_18);
+
+	iShowBMP2(vilx + 56, vily - 65, "image\\villainHealth.bmp", 0);
+	sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
+	iText(vilx + 85, vily - 35, vscoreText, GLUT_BITMAP_HELVETICA_18);
+}
+void drawgameOverPage(){
+	iFilledRectangle(0, 0, 1366, 728);
+	iShowBMP2(0, 0, "image\\gameover.bmp", 255);
+}
+
+void drawResumePage(){
+	iFilledRectangle(0, 0, 1366, 728);
+	iShowBMP2(0, 0, "image\\paused.bmp", 255);
 }
 void updateHeroPosition() {
 	if (isJumping) {
 		heroy += jumpVelocity;
-		jumpVelocity -= 0.5f;  
+		jumpVelocity -= 0.5f;
 
 		// Check if the jump is complete (hero is back on the ground)
 		if (heroy <= 150) {
@@ -655,7 +710,7 @@ void vilmotion(){
 	if (v1_count >= 6){
 		v1_count = 0;
 		v1_index = 0;
-		
+
 	}
 }
 
@@ -679,9 +734,9 @@ int main()
 	{
 		PlaySound("music\\bgmusic.wav", NULL, SND_LOOP | SND_ASYNC);
 	}
-	
-	
-	
+
+
+
 
 	iStart();
 
