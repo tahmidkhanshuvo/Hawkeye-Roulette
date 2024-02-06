@@ -619,7 +619,7 @@ void drawHscorePage(){
 }
 void drawInstructPage(){
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\instruction.bmp", 255);
+	iShowBMP2(0, 0, "image\\rule1.bmp", 255);
 }
 
 void drawCreditPage()
@@ -678,7 +678,7 @@ int main()
 	iInitialize(1366, 728, "Hawkeye Roulette");
 	e = iLoadImage("./image/loadingScreen.jpg");
 	a = iLoadImage("./image/bg.png");
-	d = iLoadImage("./image/arrow.png");
+	//d = iLoadImage("./image/arrow.png");
 	f = iLoadImage("./image/arrow2.png");
 	stone = iLoadImage("./image/stone.png");
 	gameOver = iLoadImage("./image/gameOver.jpg");
