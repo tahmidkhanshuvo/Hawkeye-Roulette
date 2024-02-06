@@ -152,16 +152,7 @@ void shoot(){
 
 	if (shooot == 1) {
 
-		/*	 // Calculate the direction towards the villain
-		float arrowDirectionX = vilx - ox;
-		float arrowDirectionY = (vily + vilhity) - oy;
-
-		// Normalize the direction vector
-		float length = std::sqrt(arrowDirectionX * arrowDirectionX + arrowDirectionY * arrowDirectionY);
-		arrowDirectionX /= length;
-		arrowDirectionY /= length; */
-
-		// Move the bullet along the normalized direction
+        // Move the bullet along the normalized direction
 		ox -= 1 * arrowDirectionX;
 		oy -= 1 * arrowDirectionY;
 
@@ -189,16 +180,15 @@ void shoot(){
 
 void vshoot(){
 	if (vshooot == 1) {
-		// Calculate the direction towards the hero
+	
 		float varrowDirectionX = (herox + shootx) - vox;
 		float varrowDirectionY = (heroy + shooty) - voy;
 
-		// Normalize the direction vector
+		
 		float vlength = std::sqrt(varrowDirectionX * varrowDirectionX + varrowDirectionY * varrowDirectionY);
 		varrowDirectionX /= vlength;
 		varrowDirectionY /= vlength;
 
-		// Move the bullet along the normalized direction
 		vox += 5 * varrowDirectionX;
 		voy += 5 * varrowDirectionY;
 
@@ -213,7 +203,6 @@ void vshoot(){
 		if ((vox <= herox + 30 && vox >= herox) && (voy >= heroy + 10 && voy <= heroy + 160)) {
 			vox = vilx - vilhitx;
 			voy = vily + vilhity;
-			//vshooot = 0;
 			herolife -= 5;
 
 		}
@@ -368,7 +357,7 @@ void iMouse(int button, int state, int mx, int my)
 			}
 			else if (homePage == 0 && gameOn == 1)    //arrow
 			{
-				PlaySound("music\\arrowSound.wav", NULL, SND_ASYNC);
+				PlaySound("music\\bulletSound.wav", NULL, SND_ASYNC);
 				// Calculate the direction towards the mouse position
 				arrowDirectionX = mx - ox;
 				arrowDirectionY = my - oy;
@@ -635,7 +624,7 @@ void drawTraceline(){
 void updateHeroPosition() {
 	if (isJumping) {
 		heroy += jumpVelocity;
-		jumpVelocity -= 0.5f;  // Gravity effect, adjust as needed
+		jumpVelocity -= 0.5f;  
 
 		// Check if the jump is complete (hero is back on the ground)
 		if (heroy <= 150) {
