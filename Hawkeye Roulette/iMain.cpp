@@ -68,10 +68,12 @@ int ux = 0;
 int uy = 0;
 
 int score = 0;
+int level ;
 
 char scoreText[20];
 char healthText[20];
 char vscoreText[20];
+char levelText[20];
 
 HighScores hs;
 
@@ -93,17 +95,12 @@ int creditPage = 0;
 
 //Hero Character Variables
 
-struct Hero {
-	int x;
-	int y;
-	int life;
-};
-Hero hero;
-
 int herox = 200;
 int heroy = 200;
 int shootx = 30;
 int shooty = 75;
+
+int hspeed;
 
 int jumpHeight = 50;     // Adjust as needed
 float jumpVelocity = 0;  // Initial jump velocity
@@ -111,15 +108,6 @@ bool isJumping = false;  // Flag to indicate if the hero is jumping
 int herolife = 50;
 
 // Villain Character Variables
-struct Villain {
-	int x;
-	int y;
-	int life;
-	// Add any other relevant properties
-};
-
-const int maxvil = 10;
-Villain vil[maxvil];
 
 int vilx = 800;
 int vily = 150;
@@ -127,6 +115,8 @@ int vilhitx = 30;
 int vilhity = 75;
 int vshootx = 30;
 int vshooty = 75;
+
+int vspeed;
 
 // Define the range for x and y coordinates within which the villain can appear
 int minX = 300;  // Adjust these values based on your game's requirements
@@ -185,8 +175,8 @@ void shoot(){
 			arrowDirectionY /= length; */
 
 			// Move the bullet along the normalized direction
-			ox -= 1 * arrowDirectionX;
-	     	oy -= 1 * arrowDirectionY;
+			ox -= hspeed * arrowDirectionX;
+	     	oy -= hspeed * arrowDirectionY;
 
 
 			// Check if the bullet has reached the villain's hitting zone
@@ -225,8 +215,8 @@ void vshoot() {
 		varrowDirectionY /= vlength;
 
 		// Move the bullet along the normalized direction
-		vox += 1 * varrowDirectionX;
-		voy += 1 * varrowDirectionY;
+		vox += vspeed * varrowDirectionX;
+		voy += vspeed * varrowDirectionY;
 
 		// Check if the bullet is still within the screen bounds
 		if (vox < 0 || vox > 1366 || voy < 0 || voy > 728) {
@@ -263,6 +253,7 @@ void drawgameOverPage();
 void drawResumePage();
 
 
+void gameLevel();
 void updateHeroPosition();
 void collision();
 void Run();
@@ -299,10 +290,12 @@ void iDraw()
 			gameOn = 0;
 		}
 		else{
+			gameLevel();
 			drawGamePage();
 			updateHeroPosition();
 			drawTraceline();
 			drawGameText();
+
 		}
 	}
 	else if (gameOn == 0 && creditPage == 1)
@@ -633,6 +626,9 @@ void drawGameText(){
 	sprintf_s(scoreText, sizeof(scoreText), "Score: %d", score);
 	iText(200, 700, scoreText, GLUT_BITMAP_HELVETICA_18);
 
+	sprintf_s(levelText, sizeof(levelText), "Level: %d", level);
+	iText(500, 700, levelText, GLUT_BITMAP_HELVETICA_18);
+
 	sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
 	iText(vilx, vily + 160, vscoreText, GLUT_BITMAP_HELVETICA_18);
 }
@@ -645,6 +641,34 @@ void drawgameOverPage(){
 void drawResumePage(){
 	iFilledRectangle(0, 0, 1366, 728);
 	iShowBMP2(0, 0, "image\\paused.bmp", 255);
+}
+
+void gameLevel(){
+	if (score == 0){
+		hspeed = 5;
+		vspeed = 1;
+		level = 1;
+	}
+	else if (score == 250){
+		hspeed = 4;
+		vspeed = 2;
+		level = 2;
+	}
+	else if (score == 500){
+		hspeed = 3;
+		vspeed = 3;
+		level = 3;
+	}
+	else if (score == 800){
+		hspeed = 2;
+		vspeed = 4;
+		level = 4;
+	}
+	else if (score == 1000){
+		hspeed = 5;
+		vspeed = 1;
+		level = 5;
+	}
 }
 
 void updateHeroPosition() {
