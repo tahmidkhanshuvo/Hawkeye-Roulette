@@ -660,8 +660,9 @@ void drawGameText(){
 	iText(154, 694, scoreText, GLUT_BITMAP_HELVETICA_18);
 	iText(10, 692, "Hero Health", GLUT_BITMAP_HELVETICA_18);
 
+	iShowBMP2(250, 665, "image\\score.bmp", 0);
 	sprintf_s(scoreText, sizeof(scoreText), "Score: %d", score);
-	iText(300, 692, scoreText, GLUT_BITMAP_HELVETICA_18);
+	iText(300, 695, scoreText, GLUT_BITMAP_HELVETICA_18);
 
 	iShowBMP2(vilx + 56, vily - 65, "image\\villainHealth.bmp", 0);
 	sprintf_s(vscoreText, sizeof(vscoreText), "%d", villainlife);
@@ -669,7 +670,7 @@ void drawGameText(){
 }
 void drawgameOverPage(){
 	iFilledRectangle(0, 0, 1366, 728);
-	iShowBMP2(0, 0, "image\\gameover.bmp", 255);
+	iShowBMP2(0, 0, "image\\gameOver.bmp", 255);
 }
 
 void drawResumePage(){
